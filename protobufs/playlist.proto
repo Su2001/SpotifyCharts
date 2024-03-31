@@ -9,6 +9,31 @@ message AddPlayListResponse {
     int32 response = 1;
 }
 
-service Recommendations {
+service AddPlayList {
     rpc Add (AddPlayListRequest) returns (AddPlayListResponse);
+}
+
+message RemovePlayListRequest {
+    int32 user_id = 1;
+    int32 song_id = 2;
+}
+
+message RemovePlayListResponse {
+    int32 response = 1;
+}
+
+service RemovePlayList {
+    rpc Remove (RemovePlayListRequest) returns (RemovePlayListResponse);
+}
+
+message GetPlayListRequest {
+    int32 user_id = 1;
+}
+
+message GetPlayListResponse {
+    repeated int32 songs = 1;
+}
+
+service GetPlayList {
+    rpc Get (GetPlayListRequest) returns (GetPlayListResponse);
 }
