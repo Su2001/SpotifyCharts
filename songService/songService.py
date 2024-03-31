@@ -6,6 +6,15 @@ from grpc_interceptor import ExceptionToStatusInterceptor
 import search_pb2
 import search_pb2_grpc
 
+from songComments_pb2 import {
+    AddCommentRequest,
+    AddCommentResponse,
+    UpdateCommentRequest,
+    UpdateCommentResponse,
+    RemoveCommentRequest,
+    RemoveCommentResponseb
+}
+
 app = Flask(__name__)
 
 class Search(search_pb2_grpc.SearchServicer):
@@ -17,7 +26,37 @@ class Search(search_pb2_grpc.SearchServicer):
         return search_pb2.GetSearchResponse(songs = [
             search_pb2.Song(id= 1,title = 'TESTE',artists = 'ARTISTA'), search_pb2.Song(id= 2,title = 'AAAAAAAAAA',artists = 'ARTISTA2')
         ])
-    
+
+class AddCommentService(songComments_pb2_grpc.AddCommentServicer):
+    def Add(self, request, context):
+        #interacte bd
+        # if request.user_id not in temp_dic:
+        #     raise NotFound("Category not found")
+        # else :
+        #     temp_dic[request.user_id].append(request.song_id)
+        # print(temp_dic)
+        return AddCommentResponse(response=1)
+
+class UpdateCommentService(songComments_pb2_grpc.UpdateCommentServicer):
+    def Get(self, request, context):
+        #interacte bd
+        # if request.user_id not in temp_dic:
+        #     raise NotFound("Category not found")
+        # else :
+        #     temp_dic[request.user_id].remove(request.song_id)
+        # print("remove ")
+        return UpdateCommentResponse(response=1)
+
+class RemoveCommentService(songComments_pb2_grpc.RemoveCommentServicer):
+    def Remove(self, request, context):
+        #interacte bd
+        # if request.user_id not in temp_dic:
+        #     raise NotFound("Category not found")
+        # else :
+        #     temp_dic[request.user_id].remove(request.song_id)
+        # print("remove ")
+        return RemoveCommentResponse(response=1)
+
 def serve():
     interceptors = [ExceptionToStatusInterceptor()]
     server = grpc.server(
