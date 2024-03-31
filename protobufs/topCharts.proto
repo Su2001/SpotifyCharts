@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+service TopCharts {
+    rpc GetTopCharts (GetTopChartsRequest) returns (GetTopChartsResponse);
+}
+
+message Song {
+    int32 id = 1;
+    string title = 2;
+    string artists = 3;
+    int32 rank = 4;
+}
+
+message GetTopChartsRequest {
+    string date = 1;
+    string country = 2;
+}
+
+message GetTopChartsResponse {
+    repeated Song songs = 1;
+}

@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+service Search {
+    rpc GetSearch (GetSearchRequest) returns (GetSearchResponse);
+}
+
+message Song {
+    int32 id = 1;
+    string title = 2;
+    string artists = 3;
+}
+
+message GetSearchRequest {
+    string songname = 1;
+}
+
+message GetSearchResponse {
+    repeated Song songs = 1;
+}
