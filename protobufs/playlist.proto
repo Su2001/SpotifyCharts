@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+message AddPlayListRequest {
+    int32 user_id = 1;
+    int32 song_id = 2;
+}
+
+message AddPlayListResponse {
+    int32 response = 1;
+}
+
+service Recommendations {
+    rpc Add (AddPlayListRequest) returns (AddPlayListResponse);
+}
