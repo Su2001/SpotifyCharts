@@ -11,7 +11,6 @@ if df_spotify is None:
 if 'charts.json' not in os.listdir():
     df_spotify.to_json("charts.json",orient = "records", date_format = "epoch", double_precision = 10, force_ascii = True, date_unit = "ms", default_handler = None, indent=2)
     print("File 'charts.json' created successfully")
-
 mydb = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -44,10 +43,10 @@ mycursor = mydb.cursor()
 mycursor.execute("DROP TABLE IF EXISTS  Songs")
 mycursor.execute('''CREATE TABLE Songs (
         song_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-        title VARCHAR(245),
+        title TEXT,
         `rank` INTEGER,
         date DATE,
-        artist VARCHAR(245),
+        artist TEXT,
         url VARCHAR(245),
         region VARCHAR(245),
         chart VARCHAR(245),
@@ -56,13 +55,23 @@ mycursor.execute('''CREATE TABLE Songs (
     )
 ''')
 mydb.commit()
+sql_query = '''INSERT INTO Songs (title, `rank`, date, artist, url, region, chart, trend, streams) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'''
+
+# Convert the DataFrame to a list of tuples
 songs_list = [tuple(x) for x in df_spotify.values]
-sql_query = '''INSERT INTO Songs (title, artist, `rank`, date, url, region, chart, trend, streams) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'''
-mycursor.executemany(sql_query, songs_list)
-mydb.commit()
+
+# Define the chunk size
+chunk_size = 100000
+
+# Insert the data in chunks
+for i in range(0, len(songs_list), chunk_size):
+    chunk = songs_list[i:i+chunk_size]
+    mycursor.executemany(sql_query, chunk)
+    print("index",i)
+    mydb.commit()
+
 print("Data inserted into table Songs in allcontentdatabase")
 mydb.close()
-
 
 # Connect to the nonduplicatesongsdatabase
 mydb = mysql.connector.connect(
@@ -76,10 +85,10 @@ mycursor = mydb.cursor()
 mycursor.execute("DROP TABLE IF EXISTS  Songs")
 mycursor.execute('''CREATE TABLE Songs (
         song_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-        title VARCHAR(245),
+        title TEXT,
         `rank` INTEGER,
         date DATE,
-        artist VARCHAR(245),
+        artist TEXT,
         url VARCHAR(245),
         region VARCHAR(245),
         chart VARCHAR(245),
@@ -89,10 +98,10 @@ mycursor.execute('''CREATE TABLE Songs (
 ''')
 mydb.commit()
 print("Table Songs created!")
-unique_songs = df_spotify[['title', 'artist']].drop_duplicates()
-unique_songs_list = [tuple(x) for x in unique_songs.values]
-sql_query = '''INSERT INTO Songs (title, artist, `rank`, date, url, region, chart, trend, streams) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'''
-mycursor.executemany(sql_query, unique_songs_list)
+df_spotify_unique = df_spotify.drop_duplicates(subset=['title', 'artist'])
+songs_list = [tuple(x) for x in df_spotify_unique.values]
+sql_query = '''INSERT INTO Songs (title, `rank`, date, artist, url, region, chart, trend, streams) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'''
+mycursor.executemany(sql_query, songs_list)
 mydb.commit()
 print("Data inserted into table Songs in nonduplicatesongsdatabase")
 mydb.close()
@@ -107,7 +116,8 @@ mydb = mysql.connector.connect(
     )
 print("Connected to database 'usersdatabase'")
 mycursor = mydb.cursor()
-mycursor.execute("DROP TABLE IF EXISTS  user")
+mycursor.execute("DROP TABLE IF EXISTS  playlists")
+mycursor.execute("DROP TABLE IF EXISTS  users")
 mycursor.execute("""
     CREATE TABLE users (
         user_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -118,7 +128,7 @@ mycursor.execute("""
 """)
 print("Table 'users' created successfully")
 
-mycursor.execute("DROP TABLE IF EXISTS  playlist")
+mycursor.execute("DROP TABLE IF EXISTS  playlists")
 # Create 'playlists' table
 mycursor.execute("""
     CREATE TABLE playlists (
