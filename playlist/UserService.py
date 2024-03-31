@@ -22,7 +22,7 @@ class AddPlayListService(playlist_pb2_grpc.AddPlayListServicer):
     def Add(self, request, context):
         #interacte bd
         if request.user_id not in temp_dic:
-            raise NotFound("Category not found")
+            return RemovePlayListResponse(response=-1)
         else :
             temp_dic[request.user_id].append(request.song_id)
         print(temp_dic)
@@ -32,7 +32,7 @@ class RemovePlayListService(playlist_pb2_grpc.RemovePlayListServicer):
     def Remove(self, request, context):
         #interacte bd
         if request.user_id not in temp_dic:
-            raise NotFound("Category not found")
+            return RemovePlayListResponse(response=-1)
         else :
             temp_dic[request.user_id].remove(request.song_id)
         print("remove ")
