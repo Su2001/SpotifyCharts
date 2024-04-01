@@ -1,17 +1,25 @@
 import pathlib
 
+import os
 import connexion
+from flask import Flask, render_template
+import grpc
+from grpc_interceptor import ExceptionToStatusInterceptor
 from flask import abort, make_response
 from flask_marshmallow import Marshmallow
 
-basedir = pathlib.Path(__file__).parent.resolve()
-connex_app = connexion.App(__name__, specification_dir=basedir)
+import songComments_pb2_grpc
+
+
+# basedir = pathlib.Path(__file__).parent.resolve()
+# connex_app = connexion.App(__name__, specification_dir=basedir)
 
 songComments_host = os.getenv("COMMENTS_HOST", "localhost")
 songComments_channel = grpc.insecure_channel(f"{songComments_host}:50051")
 songComments_client = songComments_pb2_grpc.CommentServiceStub(songComments_channel)
 
-app = config.connex_app
+# app = config.connex_app
+app = Flask(__name__)
 
 # Endpoint to add Comments to Songs
 @app.route("/premium/song-details/{song_id}/comment", methods=["POST"])
