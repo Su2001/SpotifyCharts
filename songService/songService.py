@@ -7,14 +7,14 @@ import search_pb2
 import search_pb2_grpc
 import songComments_pb2_grpc
 
-from songComments_pb2 import {
+from songComments_pb2 import (
     AddCommentRequest,
     AddCommentResponse,
     UpdateCommentRequest,
     UpdateCommentResponse,
     RemoveCommentRequest,
     RemoveCommentResponse
-}
+)
 
 app = Flask(__name__)
 
@@ -28,7 +28,7 @@ class Search(search_pb2_grpc.SearchServicer):
             search_pb2.Song(id= 1,title = 'TESTE',artists = 'ARTISTA'), search_pb2.Song(id= 2,title = 'AAAAAAAAAA',artists = 'ARTISTA2')
         ])
 
-class CommentService(songComments_pb2_grpc.AddCommentServicer, songComments_pb2_grpc.UpdateCommentServicer, songComments_pb2_grpc.RemoveCommentServicer):
+class CommentService(songComments_pb2_grpc.CommentServiceServicer):
     def Add(self, request, context):
         #interacte bd
         # if request.user_id not in temp_dic:
@@ -63,6 +63,9 @@ def serve():
     )
     search_pb2_grpc.add_SearchServicer_to_server(
         Search(), server
+    )
+    songComments_pb2_grpc.add_CommentServiceServicer_to_server(
+        CommentService(), server 
     )
     server.add_insecure_port("[::]:50051")
     server.start()
