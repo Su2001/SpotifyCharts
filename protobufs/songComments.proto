@@ -10,8 +10,14 @@ message AddCommentResponse {
     int32 response = 1;
 }
 
-service AddComment {
-    rpc Add (AddCommentRequest) returns (AddCommentResponse);
+message RemoveCommentRequest {
+    int32 user_id = 1;
+    int32 song_id = 2;
+    int32 comment_id = 3;
+}
+
+message RemoveCommentResponse {
+    int32 response = 1;
 }
 
 message UpdateCommentRequest {
@@ -25,20 +31,8 @@ message UpdateCommentResponse {
     int32 response = 1;
 }
 
-service UpdateComment {
-    rpc Get (UpdateCommentRequest) returns (UpdateCommentResponse);
-}
-
-message RemoveCommentRequest {
-    int32 user_id = 1;
-    int32 song_id = 2;
-    int32 comment_id = 3;
-}
-
-message RemoveCommentResponse {
-    int32 response = 1;
-}
-
-service RemoveComment {
+service CommentService {
+    rpc Add (AddCommentRequest) returns (AddCommentResponse);
+    rpc Update (UpdateCommentRequest) returns (UpdateCommentResponse);
     rpc Remove (RemoveCommentRequest) returns (RemoveCommentResponse);
 }

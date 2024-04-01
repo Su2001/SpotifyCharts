@@ -5,7 +5,7 @@ import grpc
 import songComments_pb2 as songComments__pb2
 
 
-class AddCommentStub(object):
+class CommentServiceStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -15,13 +15,23 @@ class AddCommentStub(object):
             channel: A grpc.Channel.
         """
         self.Add = channel.unary_unary(
-                '/AddComment/Add',
+                '/CommentService/Add',
                 request_serializer=songComments__pb2.AddCommentRequest.SerializeToString,
                 response_deserializer=songComments__pb2.AddCommentResponse.FromString,
                 )
+        self.Update = channel.unary_unary(
+                '/CommentService/Update',
+                request_serializer=songComments__pb2.UpdateCommentRequest.SerializeToString,
+                response_deserializer=songComments__pb2.UpdateCommentResponse.FromString,
+                )
+        self.Remove = channel.unary_unary(
+                '/CommentService/Remove',
+                request_serializer=songComments__pb2.RemoveCommentRequest.SerializeToString,
+                response_deserializer=songComments__pb2.RemoveCommentResponse.FromString,
+                )
 
 
-class AddCommentServicer(object):
+class CommentServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def Add(self, request, context):
@@ -30,22 +40,44 @@ class AddCommentServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def Update(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
-def add_AddCommentServicer_to_server(servicer, server):
+    def Remove(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_CommentServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'Add': grpc.unary_unary_rpc_method_handler(
                     servicer.Add,
                     request_deserializer=songComments__pb2.AddCommentRequest.FromString,
                     response_serializer=songComments__pb2.AddCommentResponse.SerializeToString,
             ),
+            'Update': grpc.unary_unary_rpc_method_handler(
+                    servicer.Update,
+                    request_deserializer=songComments__pb2.UpdateCommentRequest.FromString,
+                    response_serializer=songComments__pb2.UpdateCommentResponse.SerializeToString,
+            ),
+            'Remove': grpc.unary_unary_rpc_method_handler(
+                    servicer.Remove,
+                    request_deserializer=songComments__pb2.RemoveCommentRequest.FromString,
+                    response_serializer=songComments__pb2.RemoveCommentResponse.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'AddComment', rpc_method_handlers)
+            'CommentService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
  # This class is part of an EXPERIMENTAL API.
-class AddComment(object):
+class CommentService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -59,58 +91,14 @@ class AddComment(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/AddComment/Add',
+        return grpc.experimental.unary_unary(request, target, '/CommentService/Add',
             songComments__pb2.AddCommentRequest.SerializeToString,
             songComments__pb2.AddCommentResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
-
-class UpdateCommentStub(object):
-    """Missing associated documentation comment in .proto file."""
-
-    def __init__(self, channel):
-        """Constructor.
-
-        Args:
-            channel: A grpc.Channel.
-        """
-        self.Get = channel.unary_unary(
-                '/UpdateComment/Get',
-                request_serializer=songComments__pb2.UpdateCommentRequest.SerializeToString,
-                response_deserializer=songComments__pb2.UpdateCommentResponse.FromString,
-                )
-
-
-class UpdateCommentServicer(object):
-    """Missing associated documentation comment in .proto file."""
-
-    def Get(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-
-def add_UpdateCommentServicer_to_server(servicer, server):
-    rpc_method_handlers = {
-            'Get': grpc.unary_unary_rpc_method_handler(
-                    servicer.Get,
-                    request_deserializer=songComments__pb2.UpdateCommentRequest.FromString,
-                    response_serializer=songComments__pb2.UpdateCommentResponse.SerializeToString,
-            ),
-    }
-    generic_handler = grpc.method_handlers_generic_handler(
-            'UpdateComment', rpc_method_handlers)
-    server.add_generic_rpc_handlers((generic_handler,))
-
-
- # This class is part of an EXPERIMENTAL API.
-class UpdateComment(object):
-    """Missing associated documentation comment in .proto file."""
-
     @staticmethod
-    def Get(request,
+    def Update(request,
             target,
             options=(),
             channel_credentials=None,
@@ -120,55 +108,11 @@ class UpdateComment(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/UpdateComment/Get',
+        return grpc.experimental.unary_unary(request, target, '/CommentService/Update',
             songComments__pb2.UpdateCommentRequest.SerializeToString,
             songComments__pb2.UpdateCommentResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-
-class RemoveCommentStub(object):
-    """Missing associated documentation comment in .proto file."""
-
-    def __init__(self, channel):
-        """Constructor.
-
-        Args:
-            channel: A grpc.Channel.
-        """
-        self.Remove = channel.unary_unary(
-                '/RemoveComment/Remove',
-                request_serializer=songComments__pb2.RemoveCommentRequest.SerializeToString,
-                response_deserializer=songComments__pb2.RemoveCommentResponse.FromString,
-                )
-
-
-class RemoveCommentServicer(object):
-    """Missing associated documentation comment in .proto file."""
-
-    def Remove(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-
-def add_RemoveCommentServicer_to_server(servicer, server):
-    rpc_method_handlers = {
-            'Remove': grpc.unary_unary_rpc_method_handler(
-                    servicer.Remove,
-                    request_deserializer=songComments__pb2.RemoveCommentRequest.FromString,
-                    response_serializer=songComments__pb2.RemoveCommentResponse.SerializeToString,
-            ),
-    }
-    generic_handler = grpc.method_handlers_generic_handler(
-            'RemoveComment', rpc_method_handlers)
-    server.add_generic_rpc_handlers((generic_handler,))
-
-
- # This class is part of an EXPERIMENTAL API.
-class RemoveComment(object):
-    """Missing associated documentation comment in .proto file."""
 
     @staticmethod
     def Remove(request,
@@ -181,7 +125,7 @@ class RemoveComment(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/RemoveComment/Remove',
+        return grpc.experimental.unary_unary(request, target, '/CommentService/Remove',
             songComments__pb2.RemoveCommentRequest.SerializeToString,
             songComments__pb2.RemoveCommentResponse.FromString,
             options, channel_credentials,

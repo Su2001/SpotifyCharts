@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12songComments.proto\"F\n\x11\x41\x64\x64\x43ommentRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\x05\x12\x0f\n\x07song_id\x18\x02 \x01(\x05\x12\x0f\n\x07\x63omment\x18\x03 \x01(\t\"&\n\x12\x41\x64\x64\x43ommentResponse\x12\x10\n\x08response\x18\x01 \x01(\x05\"]\n\x14UpdateCommentRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\x05\x12\x0f\n\x07song_id\x18\x02 \x01(\x05\x12\x12\n\ncomment_id\x18\x03 \x01(\x05\x12\x0f\n\x07\x63omment\x18\x04 \x01(\t\")\n\x15UpdateCommentResponse\x12\x10\n\x08response\x18\x01 \x01(\x05\"L\n\x14RemoveCommentRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\x05\x12\x0f\n\x07song_id\x18\x02 \x01(\x05\x12\x12\n\ncomment_id\x18\x03 \x01(\x05\")\n\x15RemoveCommentResponse\x12\x10\n\x08response\x18\x01 \x01(\x05\x32<\n\nAddComment\x12.\n\x03\x41\x64\x64\x12\x12.AddCommentRequest\x1a\x13.AddCommentResponse2E\n\rUpdateComment\x12\x34\n\x03Get\x12\x15.UpdateCommentRequest\x1a\x16.UpdateCommentResponse2H\n\rRemoveComment\x12\x37\n\x06Remove\x12\x15.RemoveCommentRequest\x1a\x16.RemoveCommentResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12songComments.proto\"F\n\x11\x41\x64\x64\x43ommentRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\x05\x12\x0f\n\x07song_id\x18\x02 \x01(\x05\x12\x0f\n\x07\x63omment\x18\x03 \x01(\t\"&\n\x12\x41\x64\x64\x43ommentResponse\x12\x10\n\x08response\x18\x01 \x01(\x05\"L\n\x14RemoveCommentRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\x05\x12\x0f\n\x07song_id\x18\x02 \x01(\x05\x12\x12\n\ncomment_id\x18\x03 \x01(\x05\")\n\x15RemoveCommentResponse\x12\x10\n\x08response\x18\x01 \x01(\x05\"]\n\x14UpdateCommentRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\x05\x12\x0f\n\x07song_id\x18\x02 \x01(\x05\x12\x12\n\ncomment_id\x18\x03 \x01(\x05\x12\x0f\n\x07\x63omment\x18\x04 \x01(\t\")\n\x15UpdateCommentResponse\x12\x10\n\x08response\x18\x01 \x01(\x05\x32\xb2\x01\n\x0e\x43ommentService\x12.\n\x03\x41\x64\x64\x12\x12.AddCommentRequest\x1a\x13.AddCommentResponse\x12\x37\n\x06Update\x12\x15.UpdateCommentRequest\x1a\x16.UpdateCommentResponse\x12\x37\n\x06Remove\x12\x15.RemoveCommentRequest\x1a\x16.RemoveCommentResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -25,18 +25,14 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['_ADDCOMMENTREQUEST']._serialized_end=92
   _globals['_ADDCOMMENTRESPONSE']._serialized_start=94
   _globals['_ADDCOMMENTRESPONSE']._serialized_end=132
-  _globals['_UPDATECOMMENTREQUEST']._serialized_start=134
-  _globals['_UPDATECOMMENTREQUEST']._serialized_end=227
-  _globals['_UPDATECOMMENTRESPONSE']._serialized_start=229
-  _globals['_UPDATECOMMENTRESPONSE']._serialized_end=270
-  _globals['_REMOVECOMMENTREQUEST']._serialized_start=272
-  _globals['_REMOVECOMMENTREQUEST']._serialized_end=348
-  _globals['_REMOVECOMMENTRESPONSE']._serialized_start=350
-  _globals['_REMOVECOMMENTRESPONSE']._serialized_end=391
-  _globals['_ADDCOMMENT']._serialized_start=393
-  _globals['_ADDCOMMENT']._serialized_end=453
-  _globals['_UPDATECOMMENT']._serialized_start=455
-  _globals['_UPDATECOMMENT']._serialized_end=524
-  _globals['_REMOVECOMMENT']._serialized_start=526
-  _globals['_REMOVECOMMENT']._serialized_end=598
+  _globals['_REMOVECOMMENTREQUEST']._serialized_start=134
+  _globals['_REMOVECOMMENTREQUEST']._serialized_end=210
+  _globals['_REMOVECOMMENTRESPONSE']._serialized_start=212
+  _globals['_REMOVECOMMENTRESPONSE']._serialized_end=253
+  _globals['_UPDATECOMMENTREQUEST']._serialized_start=255
+  _globals['_UPDATECOMMENTREQUEST']._serialized_end=348
+  _globals['_UPDATECOMMENTRESPONSE']._serialized_start=350
+  _globals['_UPDATECOMMENTRESPONSE']._serialized_end=391
+  _globals['_COMMENTSERVICE']._serialized_start=394
+  _globals['_COMMENTSERVICE']._serialized_end=572
 # @@protoc_insertion_point(module_scope)
