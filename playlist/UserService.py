@@ -6,60 +6,49 @@ from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
 
 from playlist_pb2 import(
-    AddPlayListRequest,
-    AddPlayListResponse,
+    ModifyPlayListRequest,
     GetPlayListRequest,
     GetPlayListResponse,
-    RemovePlayListRequest,
-    RemovePlayListResponse
+    PlayListResponse
 )
 
 import playlist_pb2_grpc
 
 temp_dic = {1:[1],2:[2]}
 
-class AddPlayListService(playlist_pb2_grpc.AddPlayListServicer):
+class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
     def Add(self, request, context):
         #interacte bd
         if request.user_id not in temp_dic:
-            return RemovePlayListResponse(response=-1)
+            return PlayListResponse(response=-1)
         else :
             temp_dic[request.user_id].append(request.song_id)
         print(temp_dic)
-        return AddPlayListResponse(response=1)
+        return PlayListResponse(response=1)
 
-class RemovePlayListService(playlist_pb2_grpc.RemovePlayListServicer):
     def Remove(self, request, context):
         #interacte bd
         if request.user_id not in temp_dic:
-            return RemovePlayListResponse(response=-1)
+            return PlayListResponse(response=-1)
         else :
             temp_dic[request.user_id].remove(request.song_id)
         print("remove ")
-        return RemovePlayListResponse(response=1)
+        return PlayListResponse(response=1)
 
-class GetPlayListService(playlist_pb2_grpc.GetPlayListServicer):
     def Get(self, request, context):
         #interacte bd
         if request.user_id not in temp_dic:
-            raise NotFound("Category not found")
+            return GetPlayListResponse(response = -1,songs=[]) 
         print("get")
-        return GetPlayListResponse(songs=temp_dic[request.user_id])
+        return GetPlayListResponse(response = 1,songs=temp_dic[request.user_id])    
 
 def serve():
     interceptors = [ExceptionToStatusInterceptor()]
     server = grpc.server(
         futures.ThreadPoolExecutor(max_workers=10), interceptors=interceptors
     )
-    playlist_pb2_grpc.add_RemovePlayListServicer_to_server(
-        RemovePlayListService(), server
-    )
-    playlist_pb2_grpc.add_AddPlayListServicer_to_server(
-        AddPlayListService(), server
-    )
-
-    playlist_pb2_grpc.add_GetPlayListServicer_to_server(
-        GetPlayListService(), server
+    playlist_pb2_grpc.add_PlayListServiceServicer_to_server(
+        PlayListService(), server
     )
     """
     with open("server.key", "rb") as fp:

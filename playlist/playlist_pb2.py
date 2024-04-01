@@ -14,29 +14,21 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0eplaylist.proto\"6\n\x12\x41\x64\x64PlayListRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\x05\x12\x0f\n\x07song_id\x18\x02 \x01(\x05\"\'\n\x13\x41\x64\x64PlayListResponse\x12\x10\n\x08response\x18\x01 \x01(\x05\"9\n\x15RemovePlayListRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\x05\x12\x0f\n\x07song_id\x18\x02 \x01(\x05\"*\n\x16RemovePlayListResponse\x12\x10\n\x08response\x18\x01 \x01(\x05\"%\n\x12GetPlayListRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\x05\"$\n\x13GetPlayListResponse\x12\r\n\x05songs\x18\x01 \x03(\x05\x32?\n\x0b\x41\x64\x64PlayList\x12\x30\n\x03\x41\x64\x64\x12\x13.AddPlayListRequest\x1a\x14.AddPlayListResponse2K\n\x0eRemovePlayList\x12\x39\n\x06Remove\x12\x16.RemovePlayListRequest\x1a\x17.RemovePlayListResponse2?\n\x0bGetPlayList\x12\x30\n\x03Get\x12\x13.GetPlayListRequest\x1a\x14.GetPlayListResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0eplaylist.proto\"9\n\x15ModifyPlayListRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\x05\x12\x0f\n\x07song_id\x18\x02 \x01(\x05\"$\n\x10PlayListResponse\x12\x10\n\x08response\x18\x01 \x01(\x05\"%\n\x12GetPlayListRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\x05\"6\n\x13GetPlayListResponse\x12\x10\n\x08response\x18\x01 \x01(\x05\x12\r\n\x05songs\x18\x02 \x03(\x05\x32\xaa\x01\n\x0fPlayListService\x12\x30\n\x03\x41\x64\x64\x12\x16.ModifyPlayListRequest\x1a\x11.PlayListResponse\x12\x33\n\x06Remove\x12\x16.ModifyPlayListRequest\x1a\x11.PlayListResponse\x12\x30\n\x03Get\x12\x13.GetPlayListRequest\x1a\x14.GetPlayListResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'playlist_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
-  _globals['_ADDPLAYLISTREQUEST']._serialized_start=18
-  _globals['_ADDPLAYLISTREQUEST']._serialized_end=72
-  _globals['_ADDPLAYLISTRESPONSE']._serialized_start=74
-  _globals['_ADDPLAYLISTRESPONSE']._serialized_end=113
-  _globals['_REMOVEPLAYLISTREQUEST']._serialized_start=115
-  _globals['_REMOVEPLAYLISTREQUEST']._serialized_end=172
-  _globals['_REMOVEPLAYLISTRESPONSE']._serialized_start=174
-  _globals['_REMOVEPLAYLISTRESPONSE']._serialized_end=216
-  _globals['_GETPLAYLISTREQUEST']._serialized_start=218
-  _globals['_GETPLAYLISTREQUEST']._serialized_end=255
-  _globals['_GETPLAYLISTRESPONSE']._serialized_start=257
-  _globals['_GETPLAYLISTRESPONSE']._serialized_end=293
-  _globals['_ADDPLAYLIST']._serialized_start=295
-  _globals['_ADDPLAYLIST']._serialized_end=358
-  _globals['_REMOVEPLAYLIST']._serialized_start=360
-  _globals['_REMOVEPLAYLIST']._serialized_end=435
-  _globals['_GETPLAYLIST']._serialized_start=437
-  _globals['_GETPLAYLIST']._serialized_end=500
+  _globals['_MODIFYPLAYLISTREQUEST']._serialized_start=18
+  _globals['_MODIFYPLAYLISTREQUEST']._serialized_end=75
+  _globals['_PLAYLISTRESPONSE']._serialized_start=77
+  _globals['_PLAYLISTRESPONSE']._serialized_end=113
+  _globals['_GETPLAYLISTREQUEST']._serialized_start=115
+  _globals['_GETPLAYLISTREQUEST']._serialized_end=152
+  _globals['_GETPLAYLISTRESPONSE']._serialized_start=154
+  _globals['_GETPLAYLISTRESPONSE']._serialized_end=208
+  _globals['_PLAYLISTSERVICE']._serialized_start=211
+  _globals['_PLAYLISTSERVICE']._serialized_end=381
 # @@protoc_insertion_point(module_scope)

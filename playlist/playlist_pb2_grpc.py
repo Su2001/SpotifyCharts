@@ -5,7 +5,7 @@ import grpc
 import playlist_pb2 as playlist__pb2
 
 
-class AddPlayListStub(object):
+class PlayListServiceStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -15,13 +15,23 @@ class AddPlayListStub(object):
             channel: A grpc.Channel.
         """
         self.Add = channel.unary_unary(
-                '/AddPlayList/Add',
-                request_serializer=playlist__pb2.AddPlayListRequest.SerializeToString,
-                response_deserializer=playlist__pb2.AddPlayListResponse.FromString,
+                '/PlayListService/Add',
+                request_serializer=playlist__pb2.ModifyPlayListRequest.SerializeToString,
+                response_deserializer=playlist__pb2.PlayListResponse.FromString,
+                )
+        self.Remove = channel.unary_unary(
+                '/PlayListService/Remove',
+                request_serializer=playlist__pb2.ModifyPlayListRequest.SerializeToString,
+                response_deserializer=playlist__pb2.PlayListResponse.FromString,
+                )
+        self.Get = channel.unary_unary(
+                '/PlayListService/Get',
+                request_serializer=playlist__pb2.GetPlayListRequest.SerializeToString,
+                response_deserializer=playlist__pb2.GetPlayListResponse.FromString,
                 )
 
 
-class AddPlayListServicer(object):
+class PlayListServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def Add(self, request, context):
@@ -30,22 +40,44 @@ class AddPlayListServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def Remove(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
-def add_AddPlayListServicer_to_server(servicer, server):
+    def Get(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_PlayListServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'Add': grpc.unary_unary_rpc_method_handler(
                     servicer.Add,
-                    request_deserializer=playlist__pb2.AddPlayListRequest.FromString,
-                    response_serializer=playlist__pb2.AddPlayListResponse.SerializeToString,
+                    request_deserializer=playlist__pb2.ModifyPlayListRequest.FromString,
+                    response_serializer=playlist__pb2.PlayListResponse.SerializeToString,
+            ),
+            'Remove': grpc.unary_unary_rpc_method_handler(
+                    servicer.Remove,
+                    request_deserializer=playlist__pb2.ModifyPlayListRequest.FromString,
+                    response_serializer=playlist__pb2.PlayListResponse.SerializeToString,
+            ),
+            'Get': grpc.unary_unary_rpc_method_handler(
+                    servicer.Get,
+                    request_deserializer=playlist__pb2.GetPlayListRequest.FromString,
+                    response_serializer=playlist__pb2.GetPlayListResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'AddPlayList', rpc_method_handlers)
+            'PlayListService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
  # This class is part of an EXPERIMENTAL API.
-class AddPlayList(object):
+class PlayListService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -59,55 +91,11 @@ class AddPlayList(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/AddPlayList/Add',
-            playlist__pb2.AddPlayListRequest.SerializeToString,
-            playlist__pb2.AddPlayListResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/PlayListService/Add',
+            playlist__pb2.ModifyPlayListRequest.SerializeToString,
+            playlist__pb2.PlayListResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-
-class RemovePlayListStub(object):
-    """Missing associated documentation comment in .proto file."""
-
-    def __init__(self, channel):
-        """Constructor.
-
-        Args:
-            channel: A grpc.Channel.
-        """
-        self.Remove = channel.unary_unary(
-                '/RemovePlayList/Remove',
-                request_serializer=playlist__pb2.RemovePlayListRequest.SerializeToString,
-                response_deserializer=playlist__pb2.RemovePlayListResponse.FromString,
-                )
-
-
-class RemovePlayListServicer(object):
-    """Missing associated documentation comment in .proto file."""
-
-    def Remove(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-
-def add_RemovePlayListServicer_to_server(servicer, server):
-    rpc_method_handlers = {
-            'Remove': grpc.unary_unary_rpc_method_handler(
-                    servicer.Remove,
-                    request_deserializer=playlist__pb2.RemovePlayListRequest.FromString,
-                    response_serializer=playlist__pb2.RemovePlayListResponse.SerializeToString,
-            ),
-    }
-    generic_handler = grpc.method_handlers_generic_handler(
-            'RemovePlayList', rpc_method_handlers)
-    server.add_generic_rpc_handlers((generic_handler,))
-
-
- # This class is part of an EXPERIMENTAL API.
-class RemovePlayList(object):
-    """Missing associated documentation comment in .proto file."""
 
     @staticmethod
     def Remove(request,
@@ -120,55 +108,11 @@ class RemovePlayList(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/RemovePlayList/Remove',
-            playlist__pb2.RemovePlayListRequest.SerializeToString,
-            playlist__pb2.RemovePlayListResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/PlayListService/Remove',
+            playlist__pb2.ModifyPlayListRequest.SerializeToString,
+            playlist__pb2.PlayListResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-
-class GetPlayListStub(object):
-    """Missing associated documentation comment in .proto file."""
-
-    def __init__(self, channel):
-        """Constructor.
-
-        Args:
-            channel: A grpc.Channel.
-        """
-        self.Get = channel.unary_unary(
-                '/GetPlayList/Get',
-                request_serializer=playlist__pb2.GetPlayListRequest.SerializeToString,
-                response_deserializer=playlist__pb2.GetPlayListResponse.FromString,
-                )
-
-
-class GetPlayListServicer(object):
-    """Missing associated documentation comment in .proto file."""
-
-    def Get(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-
-def add_GetPlayListServicer_to_server(servicer, server):
-    rpc_method_handlers = {
-            'Get': grpc.unary_unary_rpc_method_handler(
-                    servicer.Get,
-                    request_deserializer=playlist__pb2.GetPlayListRequest.FromString,
-                    response_serializer=playlist__pb2.GetPlayListResponse.SerializeToString,
-            ),
-    }
-    generic_handler = grpc.method_handlers_generic_handler(
-            'GetPlayList', rpc_method_handlers)
-    server.add_generic_rpc_handlers((generic_handler,))
-
-
- # This class is part of an EXPERIMENTAL API.
-class GetPlayList(object):
-    """Missing associated documentation comment in .proto file."""
 
     @staticmethod
     def Get(request,
@@ -181,7 +125,7 @@ class GetPlayList(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/GetPlayList/Get',
+        return grpc.experimental.unary_unary(request, target, '/PlayListService/Get',
             playlist__pb2.GetPlayListRequest.SerializeToString,
             playlist__pb2.GetPlayListResponse.FromString,
             options, channel_credentials,
