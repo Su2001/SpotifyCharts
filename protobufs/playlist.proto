@@ -1,29 +1,12 @@
 syntax = "proto3";
 
-message AddPlayListRequest {
+message ModifyPlayListRequest {
     int32 user_id = 1;
     int32 song_id = 2;
 }
 
-message AddPlayListResponse {
+message PlayListResponse {
     int32 response = 1;
-}
-
-service AddPlayList {
-    rpc Add (AddPlayListRequest) returns (AddPlayListResponse);
-}
-
-message RemovePlayListRequest {
-    int32 user_id = 1;
-    int32 song_id = 2;
-}
-
-message RemovePlayListResponse {
-    int32 response = 1;
-}
-
-service RemovePlayList {
-    rpc Remove (RemovePlayListRequest) returns (RemovePlayListResponse);
 }
 
 message GetPlayListRequest {
@@ -31,9 +14,12 @@ message GetPlayListRequest {
 }
 
 message GetPlayListResponse {
-    repeated int32 songs = 1;
+    int32 response = 1;
+    repeated int32 songs = 2;
 }
 
-service GetPlayList {
+service PlayListService {
+    rpc Add (ModifyPlayListRequest) returns (PlayListResponse);
+    rpc Remove (ModifyPlayListRequest) returns (PlayListResponse);
     rpc Get (GetPlayListRequest) returns (GetPlayListResponse);
 }
