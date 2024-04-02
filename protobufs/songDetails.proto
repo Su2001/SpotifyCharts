@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-message Song {
+message SongDetail {
     int32 song_id = 1;
     string title = 2;
     string artists = 3;
@@ -28,5 +28,5 @@ message GetSongDetailsRequest {
 }
 
 message GetSongDetailsResponse {
-    Song song = 1;
+    SongDetail song = 1;
 }

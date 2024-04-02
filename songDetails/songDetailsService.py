@@ -21,12 +21,17 @@ def song_to_dict(song):
         "comments": [{"comment_id": comment.comment_id, "user_id": comment.user_id, "song_id": comment.song_id, "comment": comment.comment} for comment in song.comments]
     }
 
-@app.route("/regular/song-details/<int:song_id>")
-def render_homepage(song_id):
+
+@app.route("/")
+def render_homepage():
+    return "Song Details"
+
+@app.route("/regular/song-details/<int:song_id>", methods=["GET"])
+def song_details(song_id):
     request = songDetails_pb2.GetSongDetailsRequest(id=song_id)
     response = songDetails_client.GetSongDetails(request)
     song = song_to_dict(response.song)
-    return render_template('song_details.html', song=song)
+    return jsonify(song)
 
 if __name__ == "__main__":
     app.run(debug=True)
