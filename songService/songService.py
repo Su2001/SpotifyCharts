@@ -6,6 +6,8 @@ from grpc_interceptor import ExceptionToStatusInterceptor
 import search_pb2
 import search_pb2_grpc
 import songComments_pb2_grpc
+import songDetails_pb2_grpc
+
 
 from songComments_pb2 import (
     AddCommentRequest,
@@ -15,6 +17,14 @@ from songComments_pb2 import (
     RemoveCommentRequest,
     RemoveCommentResponse
 )
+
+from songDetails_pb2 import (
+    GetSongDetailsResponse,
+    GetSongDetailsRequest,
+    SongDetail,
+    Comment,
+)
+
 import mysql.connector
 mydb = mysql.connector.connect(
     host="localhost",
@@ -46,22 +56,28 @@ class Search(search_pb2_grpc.SearchServicer):
 class CommentService(songComments_pb2_grpc.CommentServiceServicer):
     def Add(self, request, context):
 
-        query = "INSERT INTO comments (user_id, song_id, comment) VALUES (%d, %d, %s);"
+        query = "INSERT INTO nonduplicatesongsdatabase.comments (user_id, song_id, comment) VALUES (%d, %d, %s);"
         mycursor.execute(query, (request.user_id, request.song_id, request.comment,))
         print("Inserted comment: ", request.user_id, request.song_id, request.comment)
         return AddCommentResponse(response=1)
 
     def Update(self, request, context):
-        query = "UPDATE comments SET comment = %s WHERE user_id = %d AND song_id = %d AND comment_id =%d;"
+        query = "UPDATE nonduplicatesongsdatabase.comments SET comment = %s WHERE user_id = %d AND song_id = %d AND comment_id =%d;"
         mycursor.execute(query, (request.comment, request.user_id, request.song_id,))
         print("Updated comment. The new comment is: ", request.comment)
         return UpdateCommentResponse(response=1)
 
     def Remove(self, request, context):
-        query = "DELETE FROM comments WHERE user_id = %d AND song_id = %d AND comment_id = %d;"
+        query = "DELETE FROM nonduplicatesongsdatabase.comments WHERE user_id = %d AND song_id = %d AND comment_id = %d;"
         mycursor.execute(query, (request.user_id, request.song_id,))
         print("Removed comment for user", request.user_id, "and song", request.song_id)
         return RemoveCommentResponse(response=1)
+        
+class SongDetails(songDetails_pb2_grpc.SongDetailsServicer):
+    def GetSongDetails(self, request, context):
+        print("SongDetails")
+        return GetSongDetailsResponse(song=SongDetail(song_id= 1,title = 'TESTE',artists = 'ARTISTA',url = 'url',numtimesincharts=5,numcountrydif=6,comments=Comment(comment_id = 1,user_id = 1,song_id = 3,comment ="boas")))
+
 
 def serve():
     interceptors = [ExceptionToStatusInterceptor()]
@@ -73,6 +89,9 @@ def serve():
     )
     songComments_pb2_grpc.add_CommentServiceServicer_to_server(
         CommentService(), server 
+    )
+    songDetails_pb2_grpc.add_SongDetailsServicer_to_server(
+        SongDetails(), server 
     )
     server.add_insecure_port("[::]:50051")
     server.start()
