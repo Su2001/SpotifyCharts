@@ -1,18 +1,37 @@
 import mysql.connector
 import pandas as pd
 import os
+import json
+from google.cloud import storage
 
-df_spotify = pd.read_csv('charts.csv')
-# Check if df_spotify exists
-if df_spotify is None:
-    print("Error: df_spotify does not exist")
-    exit()
-# Check if charts.json exists before creats it
-if 'charts.json' not in os.listdir():
-    df_spotify.to_json("charts.json",orient = "records", date_format = "epoch", double_precision = 10, force_ascii = True, date_unit = "ms", default_handler = None, indent=2)
-    print("File 'charts.json' created successfully")
+# Define the Google Cloud Storage bucket and JSON file path
+bucket_name = 'spotifychartsgroup01bucket'
+file_low_data_path = 'charts_low_data.json'
+file_full_data_path = 'charts.json'
+
+# Initialize a client
+storage_client = storage.Client()
+
+# Get the bucket
+bucket = storage_client.get_bucket(bucket_name)
+
+# Get the blob (file) from the bucket
+blob = bucket.blob(file_low_data_path)
+
+# Download the JSON data as a string
+json_data = blob.download_as_string()
+
+# Decode the JSON string
+json_data_decoded = json_data.decode('utf-8')
+
+# Load the JSON data into a Python dictionary
+data_dict = json.loads(json_data_decoded)
+
+# Convert the dictionary into a Pandas DataFrame
+df_spotify = pd.DataFrame(data_dict)
+
 mydb = mysql.connector.connect(
-    host="localhost",
+    host="172.18.0.2",
     user="root",
     password='1234'
 )
@@ -32,7 +51,7 @@ for desired_database in desired_databases:
         print(f"Database '{desired_database}' already exists")
 # Connect to the allcontentdatabase
 mydb = mysql.connector.connect(
-        host="localhost",
+        host="172.18.0.2",
         user="root",
         password='1234',
         database='allcontentdatabase'
@@ -74,7 +93,7 @@ mydb.close()
 
 # Connect to the nonduplicatesongsdatabase
 mydb = mysql.connector.connect(
-        host="localhost",
+        host="172.18.0.2",
         user="root",
         password='1234',
         database='nonduplicatesongsdatabase'
@@ -122,7 +141,7 @@ mydb.close()
 
 # Connect to the usersdatabase
 mydb = mysql.connector.connect(
-        host="localhost",
+        host="172.18.0.2",
         user="root",
         password='1234',
         database='usersdatabase'

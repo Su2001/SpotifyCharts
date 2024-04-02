@@ -95,10 +95,7 @@ class SongDetails(songDetails_pb2_grpc.SongDetailsServicer):
             comments.append(Comment(comment_id=comment_id, user_id=user_id, song_id=song_id, comment=comment_text))
 
         song = SongDetail(song_id=song_id, title=title, artists=artists, url=url, numtimesincharts=numtimesincharts, numcountrydif=numcountrydif, comments=comments)
-        return songDetails_pb2.GetSongDetailsResponse(song=song))
-
-        
-        
+        return songDetails_pb2.GetSongDetailsResponse(song=song)
 
 
 def serve():
