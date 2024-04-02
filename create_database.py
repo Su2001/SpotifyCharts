@@ -30,7 +30,6 @@ for desired_database in desired_databases:
         print(f"Database '{desired_database}' created successfully")
     else:
         print(f"Database '{desired_database}' already exists")
-
 # Connect to the allcontentdatabase
 mydb = mysql.connector.connect(
         host="localhost",
@@ -86,21 +85,35 @@ mycursor.execute("DROP TABLE IF EXISTS  Songs")
 mycursor.execute('''CREATE TABLE Songs (
         song_id INTEGER AUTO_INCREMENT PRIMARY KEY,
         title TEXT,
-        `rank` INTEGER,
-        date DATE,
         artist TEXT,
         url VARCHAR(245),
-        region VARCHAR(245),
-        chart VARCHAR(245),
-        trend VARCHAR(245),
-        streams INTEGER
+        numtimesincharts INTEGER,
+        numcountrydif INTEGER
     )
 ''')
 mydb.commit()
 print("Table Songs created!")
-df_spotify_unique = df_spotify.drop_duplicates(subset=['title', 'artist'])
-songs_list = [tuple(x) for x in df_spotify_unique.values]
-sql_query = '''INSERT INTO Songs (title, `rank`, date, artist, url, region, chart, trend, streams) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'''
+mycursor.execute("DROP TABLE IF EXISTS  Comments")
+mycursor.execute('''CREATE TABLE Comments (
+        comment_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+        user_id INTEGER,
+        song_id INTEGER,
+        comment TEXT
+        )
+''')
+print("Table Comments created!")
+df_spotify_unique = df_spotify.drop_duplicates(subset=['title', 'artist']).copy()
+# Calculate numtimesincharts and numcountrydif
+numtimesincharts = df_spotify.groupby(['title', 'artist']).size().reset_index(name='numtimesincharts')
+numcountrydif = df_spotify.groupby(['title', 'artist'])['region'].nunique().reset_index(name='numcountrydif')
+
+# Merge df_spotify_unique with numtimesincharts and numcountrydif
+df_spotify_unique = pd.merge(df_spotify_unique, numtimesincharts, on=['title', 'artist'])
+df_spotify_unique = pd.merge(df_spotify_unique, numcountrydif, on=['title', 'artist'])
+
+songs_list = [(x['title'], x['artist'], x['url'], x['numtimesincharts'], x['numcountrydif']) for x in df_spotify_unique.to_dict('records')]
+sql_query = '''INSERT INTO Songs (title, artist, url, numtimesincharts, numcountrydif) VALUES (%s, %s, %s, %s, %s)'''
+
 mycursor.executemany(sql_query, songs_list)
 mydb.commit()
 print("Data inserted into table Songs in nonduplicatesongsdatabase")

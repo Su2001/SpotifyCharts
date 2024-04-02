@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+message Song {
+    int32 song_id = 1;
+    string title = 2;
+    string artists = 3;
+    string url = 4;
+    int32 numtimesincharts  = 5;
+    int32 numcountrydif  = 6;
+    repeated Comment comments = 7;
+}
+
+message Comment {
+    int32 comment_id = 1;
+    int32 user_id = 2;
+    int32 song_id = 3;
+    string comment = 4;
+}
+
+
+service SongDetails {
+    rpc GetSongDetails (GetSongDetailsRequest) returns (GetSongDetailsResponse);
+}
+
+
+message GetSongDetailsRequest {
+    int32 id = 1;
+}
+
+message GetSongDetailsResponse {
+    Song song = 1;
+}
