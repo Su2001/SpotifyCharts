@@ -9,7 +9,7 @@ import topCharts_pb2
 import topCharts_pb2_grpc
 import mysql.connector
 mydb = mysql.connector.connect(
-    host="localhost",
+    host="172.18.0.2",
     user="root",
     password="1234"
 )

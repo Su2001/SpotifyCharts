@@ -5,7 +5,7 @@ import search_pb2
 import search_pb2_grpc
 app = Flask(__name__)
 
-search_host = os.getenv("TOPCHARTS_HOST", "localhost")
+search_host = os.getenv("SEARCH_HOST", "localhost")
 search_channel = grpc.insecure_channel(f"{search_host}:50051")
 search_client = search_pb2_grpc.SearchStub(search_channel)
 
@@ -38,7 +38,7 @@ def search():
     return("ERROR ON INPUT")
 
 
-if __name__ == "__main__":
-    app.run(debug = True)
+# if __name__ == "__main__":
+#     app.run(debug = True)
 
 

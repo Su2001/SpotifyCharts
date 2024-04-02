@@ -23,7 +23,7 @@ from songDetails_pb2 import (
 
 import mysql.connector
 mydb = mysql.connector.connect(
-    host="localhost",
+    host="172.18.0.2",
     user="root",
     password="1234"
 )

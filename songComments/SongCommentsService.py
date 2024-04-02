@@ -86,5 +86,5 @@ def deleteComment(song_id, comment_id):
         return("ERROR, Delete failed") 
     return jsonify(comment_response.response)
 
-if __name__ == "__main__":
-    app.run(debug=True)
+# if __name__ == "__main__":
+#     app.run(debug=True)

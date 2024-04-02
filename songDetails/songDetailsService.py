@@ -4,6 +4,7 @@ import songDetails_pb2
 import songDetails_pb2_grpc
 import grpc
 
+
 app = Flask(__name__)
 
 songDetails_host = os.getenv("SONGDETAILS_HOST", "localhost")
@@ -33,5 +34,5 @@ def song_details(song_id):
     song = song_to_dict(response.song)
     return jsonify(song)
 
-if __name__ == "__main__":
-    app.run(debug=True)
+# if __name__ == "__main__":
+#     app.run(debug=True)

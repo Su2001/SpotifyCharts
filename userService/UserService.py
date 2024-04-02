@@ -4,6 +4,7 @@ import random
 import grpc
 from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
+import mysql.connector
 
 from playlist_pb2 import(
     ModifyPlayListRequest,
@@ -15,7 +16,7 @@ from playlist_pb2 import(
 import playlist_pb2_grpc
 
 mydb = mysql.connector.connect(
-    host="localhost",
+    host="172.18.0.2",
     user="root",
     password="1234"
 )
