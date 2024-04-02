@@ -10,19 +10,15 @@ import songDetails_pb2_grpc
 
 
 from songComments_pb2 import (
-    AddCommentRequest,
     AddCommentResponse,
-    UpdateCommentRequest,
     UpdateCommentResponse,
-    RemoveCommentRequest,
     RemoveCommentResponse
 )
 
 from songDetails_pb2 import (
     GetSongDetailsResponse,
-    GetSongDetailsRequest,
     SongDetail,
-    Comment,
+    Comment
 )
 
 import mysql.connector
@@ -81,7 +77,7 @@ class SongDetails(songDetails_pb2_grpc.SongDetailsServicer):
         song_result = mycursor.fetchone()
 
         if song_result is None:
-            return songDetails_pb2.GetSongDetailsResponse()
+            return GetSongDetailsResponse()
 
         song_id, title, artists, url, numtimesincharts, numcountrydif = song_result
 
@@ -95,11 +91,7 @@ class SongDetails(songDetails_pb2_grpc.SongDetailsServicer):
             comments.append(Comment(comment_id=comment_id, user_id=user_id, song_id=song_id, comment=comment_text))
 
         song = SongDetail(song_id=song_id, title=title, artists=artists, url=url, numtimesincharts=numtimesincharts, numcountrydif=numcountrydif, comments=comments)
-        return songDetails_pb2.GetSongDetailsResponse(song=song))
-
-        
-        
-
+        return GetSongDetailsResponse(song=song)
 
 def serve():
     interceptors = [ExceptionToStatusInterceptor()]
