@@ -11,4 +11,4 @@ RUN python -m grpc_tools.protoc -I ../protobufs --python_out=. \
            --grpc_python_out=. ../protobufs/songComments.proto
 
 EXPOSE 50051
-ENTRYPOINT [ "python", "songCommentsService.py" ]
+ENTRYPOINT [ "python", "SongCommentsService.py" ]
