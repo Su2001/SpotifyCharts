@@ -20,8 +20,6 @@ app = Flask(__name__)
 
 class TopCharts(topCharts_pb2_grpc.TopChartsServicer):
     def GetTopCharts(self, request, context):
-        print("ENTROU NO ALLCONTENT")
-
         query = "SELECT song_id, title, `rank`, artist, chart FROM allcontentdatabase.songs WHERE date = %s AND region = %s"
         mycursor.execute(query, (request.date, request.country,))
         result = mycursor.fetchall()

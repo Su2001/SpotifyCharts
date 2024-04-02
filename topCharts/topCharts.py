@@ -37,7 +37,7 @@ def render_homepage():
         else:
             return("ERROR, NO MATCH FOR THE COUNTRY AND DATE INPUTED")
 
-    return "ERROR, Tem de introduzir uma data e um pais"
+    return "ERROR, YOU HAVE TO INPUT A DATE AND A COUNTRY, SYNTAX FOR THE DATE- '%Y-%m-%d' "
 
 if __name__ == "__main__":
     app.run(debug=True)
