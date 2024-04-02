@@ -1,16 +1,14 @@
 from flask import Flask, request, jsonify, render_template
 import os
-from playlist_pb2 import AddPlayListRequest, GetPlayListRequest, RemovePlayListRequest
-from playlist_pb2_grpc import AddPlayListStub, GetPlayListStub, RemovePlayListStub
+from playlist_pb2 import ModifyPlayListRequest, GetPlayListRequest
+from playlist_pb2_grpc import PlayListServiceStub
 import grpc
 
 app = Flask(__name__)
 
 playList_host = os.getenv("PLAYLIST_HOST", "localhost")
 playList_channel = grpc.insecure_channel(f"{playList_host}:50051")
-post_playList_client = AddPlayListStub(playList_channel)
-delete_playList_client = RemovePlayListStub(playList_channel)
-get_playList_client = GetPlayListStub(playList_channel)
+playList_client = PlayListServiceStub(playList_channel)
 
 @app.route("/")
 @app.route("/premium/playlist", methods=["GET"])
@@ -18,7 +16,9 @@ def get_PlayList():
     user_id = request.args.get("user_id")
     #grpc
     request = GetPlayListRequest(user_id=user_id)
-    response = get_playList_client.Get(request)
+    response = playList_client.Get(request)
+    if response.response == -1:
+        return ("ERROR, the user is not found") 
     a = list(response.songs)
     return jsonify(a)
     """
@@ -31,10 +31,10 @@ def get_PlayList():
 @app.route("/premium/playlist/<int:song_id>", methods=["POST"])
 def add_PlayList(song_id):
     user_id = request.args.get("user_id")
-    print(123)
+
     #grpc
-    request = AddPlayListRequest(user_id = user_id, song_id = song_id)
-    response = post_playList_client.Add(request)
+    request = ModifyPlayListRequest(user_id = user_id, song_id = song_id)
+    response = playList_client.Add(request)
     if response.response == -1:
         return("ERROR, Add failed") 
     return jsonify(response)
@@ -42,10 +42,10 @@ def add_PlayList(song_id):
 @app.route("/premium/playlist/<int:song_id>", methods=["DELETE"])
 def remove_PlayList(song_id):
     user_id = request.args.get("user_id")
-    print(123)
+
     #grpc
-    request = RemovePlayListRequest(user_id = user_id, song_id = song_id)
-    response = delete_playList_client.Remove(request)
+    request = ModifyPlayListRequest(user_id = user_id, song_id = song_id)
+    response = playList_client.Remove(request)
     if response.response == -1:
         return("ERROR, Remove failed") 
     return jsonify(response)
