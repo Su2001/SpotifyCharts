@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0ftopCharts.proto\"@\n\x04Song\x12\n\n\x02id\x18\x01 \x01(\x05\x12\r\n\x05title\x18\x02 \x01(\t\x12\x0f\n\x07\x61rtists\x18\x03 \x01(\t\x12\x0c\n\x04rank\x18\x04 \x01(\x05\"4\n\x13GetTopChartsRequest\x12\x0c\n\x04\x64\x61te\x18\x01 \x01(\t\x12\x0f\n\x07\x63ountry\x18\x02 \x01(\t\",\n\x14GetTopChartsResponse\x12\x14\n\x05songs\x18\x01 \x03(\x0b\x32\x05.Song2H\n\tTopCharts\x12;\n\x0cGetTopCharts\x12\x14.GetTopChartsRequest\x1a\x15.GetTopChartsResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0ftopCharts.proto\"O\n\x04Song\x12\n\n\x02id\x18\x01 \x01(\x05\x12\r\n\x05title\x18\x02 \x01(\t\x12\x0f\n\x07\x61rtists\x18\x03 \x01(\t\x12\x0c\n\x04rank\x18\x04 \x01(\x05\x12\r\n\x05\x63hart\x18\x05 \x01(\t\"4\n\x13GetTopChartsRequest\x12\x0c\n\x04\x64\x61te\x18\x01 \x01(\t\x12\x0f\n\x07\x63ountry\x18\x02 \x01(\t\",\n\x14GetTopChartsResponse\x12\x14\n\x05songs\x18\x01 \x03(\x0b\x32\x05.Song2H\n\tTopCharts\x12;\n\x0cGetTopCharts\x12\x14.GetTopChartsRequest\x1a\x15.GetTopChartsResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -22,11 +22,11 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'topCharts_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
   _globals['_SONG']._serialized_start=19
-  _globals['_SONG']._serialized_end=83
-  _globals['_GETTOPCHARTSREQUEST']._serialized_start=85
-  _globals['_GETTOPCHARTSREQUEST']._serialized_end=137
-  _globals['_GETTOPCHARTSRESPONSE']._serialized_start=139
-  _globals['_GETTOPCHARTSRESPONSE']._serialized_end=183
-  _globals['_TOPCHARTS']._serialized_start=185
-  _globals['_TOPCHARTS']._serialized_end=257
+  _globals['_SONG']._serialized_end=98
+  _globals['_GETTOPCHARTSREQUEST']._serialized_start=100
+  _globals['_GETTOPCHARTSREQUEST']._serialized_end=152
+  _globals['_GETTOPCHARTSRESPONSE']._serialized_start=154
+  _globals['_GETTOPCHARTSRESPONSE']._serialized_end=198
+  _globals['_TOPCHARTS']._serialized_start=200
+  _globals['_TOPCHARTS']._serialized_end=272
 # @@protoc_insertion_point(module_scope)

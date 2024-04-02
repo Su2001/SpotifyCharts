@@ -15,45 +15,52 @@ from songComments_pb2 import (
     RemoveCommentRequest,
     RemoveCommentResponse
 )
+import mysql.connector
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="1234"
+)
+mycursor = mydb.cursor()
+mydb.database = "nonduplicatesongsdatabase"
 
 app = Flask(__name__)
 
 class Search(search_pb2_grpc.SearchServicer):
     def GetSearch(self, request, context):
-        print("ENTROU NO SONG")
-        #FALTA FAZER O PEDIDO à BD PARA OBTER O TOP CHARTS
-        # gotTopCharts = 1
-        # return topCharts_pb2.GetTopChartsResponse(topcharts = gotTopCharts)
-        return search_pb2.GetSearchResponse(songs = [
-            search_pb2.Song(id= 1,title = 'TESTE',artists = 'ARTISTA'), search_pb2.Song(id= 2,title = 'AAAAAAAAAA',artists = 'ARTISTA2')
-        ])
+        query = "SELECT song_id, title, artist FROM nonduplicatesongsdatabase.songs WHERE title LIKE %s"
+        search_term = '%' + request.songname + '%'  # Assuming user_input_title is the substring provided by the user
+        mycursor.execute(query, (search_term,))
+        result = mycursor.fetchall()
+        songs = []
+        for row in result:
+            song = search_pb2.Song(
+                id=row[0],
+                title=row[1],
+                artists=row[2]
+            )
+            songs.append(song)
+            # print("Fetched song:", song)
+        return search_pb2.GetSearchResponse(songs=songs)
 
 class CommentService(songComments_pb2_grpc.CommentServiceServicer):
     def Add(self, request, context):
-        #interacte bd
-        # if request.user_id not in temp_dic:
-        #     raise NotFound("Category not found")
-        # else :
-        #     temp_dic[request.user_id].append(request.song_id)
-        # print(temp_dic)
+
+        query = "INSERT INTO comments (user_id, song_id, comment) VALUES (%d, %d, %s);"
+        mycursor.execute(query, (request.user_id, request.song_id, request.comment,))
+        print("Inserted comment: ", request.user_id, request.song_id, request.comment)
         return AddCommentResponse(response=1)
 
     def Update(self, request, context):
-        #interacte bd
-        # if request.user_id not in temp_dic:
-        #     raise NotFound("Category not found")
-        # else :
-        #     temp_dic[request.user_id].remove(request.song_id)
-        # print("remove ")
+        query = "UPDATE comments SET comment = %s WHERE user_id = %d AND song_id = %d AND comment_id =%d;"
+        mycursor.execute(query, (request.comment, request.user_id, request.song_id,))
+        print("Updated comment. The new comment is: ", request.comment)
         return UpdateCommentResponse(response=1)
 
     def Remove(self, request, context):
-        #interacte bd
-        # if request.user_id not in temp_dic:
-        #     raise NotFound("Category not found")
-        # else :
-        #     temp_dic[request.user_id].remove(request.song_id)
-        # print("remove ")
+        query = "DELETE FROM comments WHERE user_id = %d AND song_id = %d AND comment_id = %d;"
+        mycursor.execute(query, (request.user_id, request.song_id,))
+        print("Removed comment for user", request.user_id, "and song", request.song_id)
         return RemoveCommentResponse(response=1)
 
 def serve():
