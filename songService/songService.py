@@ -10,19 +10,15 @@ import songDetails_pb2_grpc
 
 
 from songComments_pb2 import (
-    AddCommentRequest,
     AddCommentResponse,
-    UpdateCommentRequest,
     UpdateCommentResponse,
-    RemoveCommentRequest,
     RemoveCommentResponse
 )
 
 from songDetails_pb2 import (
     GetSongDetailsResponse,
-    GetSongDetailsRequest,
     SongDetail,
-    Comment,
+    Comment
 )
 
 import mysql.connector
@@ -81,7 +77,7 @@ class SongDetails(songDetails_pb2_grpc.SongDetailsServicer):
         song_result = mycursor.fetchone()
 
         if song_result is None:
-            return songDetails_pb2.GetSongDetailsResponse()
+            return GetSongDetailsResponse()
 
         song_id, title, artists, url, numtimesincharts, numcountrydif = song_result
 
