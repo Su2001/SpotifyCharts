@@ -14,33 +14,47 @@ from playlist_pb2 import(
 
 import playlist_pb2_grpc
 
-temp_dic = {1:[1],2:[2]}
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="1234"
+)
+mycursor = mydb.cursor()
+mydb.database = "usersdatabase"
 
 class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
     def Add(self, request, context):
         #interacte bd
-        if request.user_id not in temp_dic:
+        try:
+            query = "INSERT INTO usersdatabase.playlists (user_id, song_id) VALUES (%d, %d);"
+            mycursor.execute(query, (request.user_id, request.song_id,))
+        except:
             return PlayListResponse(response=-1)
-        else :
-            temp_dic[request.user_id].append(request.song_id)
-        print(temp_dic)
+        
+        print("Inserted comment: ", request.user_id, request.song_id)
         return PlayListResponse(response=1)
 
     def Remove(self, request, context):
         #interacte bd
-        if request.user_id not in temp_dic:
+        try:
+            query = "DELETE FROM usersdatabase.playlists WHERE user_id = %d AND song_id = %d;"
+            mycursor.execute(query, (request.user_id, request.song_id,))
+        except:
             return PlayListResponse(response=-1)
-        else :
-            temp_dic[request.user_id].remove(request.song_id)
-        print("remove ")
+        print("Removed a song for user", request.user_id, "and song", request.song_id)
         return PlayListResponse(response=1)
 
     def Get(self, request, context):
         #interacte bd
-        if request.user_id not in temp_dic:
+        try:
+            query = "SELECT song_id FROM usersdatabase.playlists WHERE user_id = %d;"
+            select_term = '%' + request.song_id + '%'  
+            mycursor.execute(query, (select_term,))
+            result = mycursor.fetchall()
+            return GetPlayListResponse(response = 1,songs=result) 
+        except:
             return GetPlayListResponse(response = -1,songs=[]) 
-        print("get")
-        return GetPlayListResponse(response = 1,songs=temp_dic[request.user_id])    
+           
 
 def serve():
     interceptors = [ExceptionToStatusInterceptor()]
