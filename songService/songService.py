@@ -45,30 +45,22 @@ class Search(search_pb2_grpc.SearchServicer):
 
 class CommentService(songComments_pb2_grpc.CommentServiceServicer):
     def Add(self, request, context):
-        #interacte bd
-        # if request.user_id not in temp_dic:
-        #     raise NotFound("Category not found")
-        # else :
-        #     temp_dic[request.user_id].append(request.song_id)
-        # print(temp_dic)
+
+        query = "INSERT INTO comments (user_id, song_id, comment) VALUES (%d, %d, %s);"
+        mycursor.execute(query, (request.user_id, request.song_id, request.comment,))
+        print("Inserted comment: ", request.user_id, request.song_id, request.comment)
         return AddCommentResponse(response=1)
 
     def Update(self, request, context):
-        #interacte bd
-        # if request.user_id not in temp_dic:
-        #     raise NotFound("Category not found")
-        # else :
-        #     temp_dic[request.user_id].remove(request.song_id)
-        # print("remove ")
+        query = "UPDATE comments SET comment = %s WHERE user_id = %d AND song_id = %d AND comment_id =%d;"
+        mycursor.execute(query, (request.comment, request.user_id, request.song_id,))
+        print("Updated comment. The new comment is: ", request.comment)
         return UpdateCommentResponse(response=1)
 
     def Remove(self, request, context):
-        #interacte bd
-        # if request.user_id not in temp_dic:
-        #     raise NotFound("Category not found")
-        # else :
-        #     temp_dic[request.user_id].remove(request.song_id)
-        # print("remove ")
+        query = "DELETE FROM comments WHERE user_id = %d AND song_id = %d AND comment_id = %d;"
+        mycursor.execute(query, (request.user_id, request.song_id,))
+        print("Removed comment for user", request.user_id, "and song", request.song_id)
         return RemoveCommentResponse(response=1)
 
 def serve():
