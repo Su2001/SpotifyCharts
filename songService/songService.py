@@ -75,8 +75,30 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
 
 class SongDetails(songDetails_pb2_grpc.SongDetailsServicer):
     def GetSongDetails(self, request, context):
-        print("SongDetails")
-        return GetSongDetailsResponse(song=SongDetail(song_id= 1,title = 'TESTE',artists = 'ARTISTA',url = 'url',numtimesincharts=5,numcountrydif=6,comments=[Comment(comment_id = 1,user_id = 1,song_id = 3,comment ="boas")]))
+        song_id = request.id
+        song_query = "SELECT * FROM Songs WHERE song_id = %s"
+        mycursor.execute(song_query, (song_id,))
+        song_result = mycursor.fetchone()
+
+        if song_result is None:
+            return songDetails_pb2.GetSongDetailsResponse()
+
+        song_id, title, artists, url, numtimesincharts, numcountrydif = song_result
+
+        comment_query = "SELECT * FROM Comments WHERE song_id = %s"
+        mycursor.execute(comment_query, (song_id,))
+        comment_results = mycursor.fetchall()
+
+        comments = []
+        for comment_result in comment_results:
+            comment_id, user_id, song_id, comment_text = comment_result
+            comments.append(Comment(comment_id=comment_id, user_id=user_id, song_id=song_id, comment=comment_text))
+
+        song = SongDetail(song_id=song_id, title=title, artists=artists, url=url, numtimesincharts=numtimesincharts, numcountrydif=numcountrydif, comments=comments)
+        return songDetails_pb2.GetSongDetailsResponse(song=song))
+
+        
+        
 
 
 def serve():
