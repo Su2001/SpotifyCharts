@@ -72,11 +72,11 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
         mycursor.execute(query, (request.user_id, request.song_id,))
         print("Removed comment for user", request.user_id, "and song", request.song_id)
         return RemoveCommentResponse(response=1)
-        
+
 class SongDetails(songDetails_pb2_grpc.SongDetailsServicer):
     def GetSongDetails(self, request, context):
         print("SongDetails")
-        return GetSongDetailsResponse(song=SongDetail(song_id= 1,title = 'TESTE',artists = 'ARTISTA',url = 'url',numtimesincharts=5,numcountrydif=6,comments=Comment(comment_id = 1,user_id = 1,song_id = 3,comment ="boas")))
+        return GetSongDetailsResponse(song=SongDetail(song_id= 1,title = 'TESTE',artists = 'ARTISTA',url = 'url',numtimesincharts=5,numcountrydif=6,comments=[Comment(comment_id = 1,user_id = 1,song_id = 3,comment ="boas")]))
 
 
 def serve():
@@ -96,6 +96,6 @@ def serve():
     server.add_insecure_port("[::]:50051")
     server.start()
     server.wait_for_termination()
-
+    
 if __name__ == "__main__":
     serve()
