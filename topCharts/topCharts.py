@@ -15,7 +15,8 @@ def song_to_dict(song):
         "id": song.id,
         "title": song.title,
         "artists": song.artists,
-        "rank": song.rank
+        "rank": song.rank,
+        "chart": song.chart
     }
 
 @app.route("/regular/top-charts")

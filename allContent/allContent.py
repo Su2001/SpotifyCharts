@@ -1,4 +1,5 @@
 from concurrent import futures
+import datetime
 import random
 
 from flask import Flask, render_template
@@ -6,17 +7,37 @@ import grpc
 from grpc_interceptor import ExceptionToStatusInterceptor
 import topCharts_pb2
 import topCharts_pb2_grpc
+import mysql.connector
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="1234"
+)
+mycursor = mydb.cursor()
+mydb.database = "allcontentdatabase"
 
 app = Flask(__name__)
 
 class TopCharts(topCharts_pb2_grpc.TopChartsServicer):
     def GetTopCharts(self, request, context):
         print("ENTROU NO ALLCONTENT")
-        #FALTA FAZER O PEDIDO à BD PARA OBTER O TOP CHARTS
-        # return topCharts_pb2.GetTopChartsResponse(topcharts = gotTopCharts)
-        return topCharts_pb2.GetTopChartsResponse(songs = [
-            topCharts_pb2.Song(id= 1,title = 'TESTE',artists = 'ARTISTA',rank = 4), topCharts_pb2.Song(id= 2,title = 'AAAAAAAAAA',artists = 'ARTISTA',rank = 4)
-        ])
+
+        query = "SELECT song_id, title, `rank`, artist, chart FROM allcontentdatabase.songs WHERE date = %s AND region = %s"
+        mycursor.execute(query, (request.date, request.country,))
+        result = mycursor.fetchall()
+        songs = []
+        for row in result:
+            song = topCharts_pb2.Song(
+                id=row[0],
+                title=row[1],
+                rank=row[2],
+                artists=row[3],
+                chart=row[4]
+            )
+            songs.append(song)
+            print("Fetched song:", song)
+        return topCharts_pb2.GetTopChartsResponse(songs=songs)
+
 
 def serve():
     interceptors = [ExceptionToStatusInterceptor()]
