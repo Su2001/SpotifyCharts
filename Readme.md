@@ -4,17 +4,17 @@ How to run the project:
 ./build.sh
 
 How to test the different use cases:
-search(GET), after acessing the correspondent link for the use case add the following suffix after the .dev in the link:
+search(GET), after accessing the correspondent link for the use case add the following suffix after the .dev in the link:
       /regular/search?song=a
   <br>for example:
       https://5001-cs-314474093647-default.cs-europe-west1-xedi.cloudshell.dev/regular/search?song=a
 
-topcharts(GET), after acessing the correspondent link for the use case add the following suffix after the .dev in the link:
+topcharts(GET), after accessing the correspondent link for the use case add the following suffix after the .dev in the link:
       /regular/top-charts?date=2017-01-01&country=Argentina
   <br>for example:
       https://5001-cs-314474093647-default.cs-europe-west1-xedi.cloudshell.dev/regular/top-charts?date=2017-01-01&country=Argentina
       
-song details(GET), after acessing the correspondent link for the use case add the following suffix after the .dev in the link:
+song details(GET), after accessing the correspondent link for the use case add the following suffix after the .dev in the link:
       /regular/song-details/1
   <br>for example:
       https://5003-cs-314474093647-default.cs-europe-west1-xedi.cloudshell.dev/regular/song-details/1
@@ -39,6 +39,8 @@ playlist(DELETE), it is possible to execute a DELETE through the following code,
       curl -i -X DELETE http://127.0.0.1:8080/premium/playlist/1?user_id=1
     <br>to check you need to access the database and check the table
 
-playlist(GET), it is possible to execute a DELETE through the following code, inserting it in the console:
-      curl -i -X DELETE http://127.0.0.1:8080/premium/playlist/1?user_id=1
+playlist(GET), after accessing the correspondent link for the use case add the following suffix after the .dev in the link:
+      /premium/playlist?user_id=1
+      for example:
+      https://8080-cs-314474093647-default.cs-europe-west1-xedi.cloudshell.dev/premium/playlist?user_id=1
     <br>to check you need to access the database and check the table
