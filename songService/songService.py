@@ -22,19 +22,19 @@ from songDetails_pb2 import (
 )
 
 import mysql.connector
-mydb = mysql.connector.connect(
-    host="172.18.0.2",
-    user="root",
-    password="1234"
-)
-mycursor = mydb.cursor()
-mydb.database = "nonduplicatesongsdatabase"
 
-app = Flask(__name__)
 
 class Search(search_pb2_grpc.SearchServicer):
     def GetSearch(self, request, context):
-        query = "SELECT song_id, title, artist FROM nonduplicatesongsdatabase.songs WHERE title LIKE %s"
+        mydb = mysql.connector.connect(
+            host="172.19.0.2",
+                user="root",
+                password='1234'
+        )
+        mycursor = mydb.cursor()
+        mydb.database = "nonduplicatesongsdatabase"
+
+        query = "SELECT song_id, title, artist FROM nonduplicatesongsdatabase.Songs WHERE title LIKE %s"
         search_term = '%' + request.songname + '%'  # Assuming user_input_title is the substring provided by the user
         mycursor.execute(query, (search_term,))
         result = mycursor.fetchall()
@@ -46,31 +46,62 @@ class Search(search_pb2_grpc.SearchServicer):
                 artists=row[2]
             )
             songs.append(song)
-            # print("Fetched song:", song)
+            print("Fetched song:", song)
+        mydb.close()
         return search_pb2.GetSearchResponse(songs=songs)
 
 class CommentService(songComments_pb2_grpc.CommentServiceServicer):
     def Add(self, request, context):
-
+        mydb = mysql.connector.connect(
+            host="172.19.0.2",
+                user="root",
+                password='1234'
+        )
+        mycursor = mydb.cursor()
+        mydb.database = "nonduplicatesongsdatabase"
         query = "INSERT INTO nonduplicatesongsdatabase.comments (user_id, song_id, comment) VALUES (%d, %d, %s);"
         mycursor.execute(query, (request.user_id, request.song_id, request.comment,))
         print("Inserted comment: ", request.user_id, request.song_id, request.comment)
+        mydb.close()
         return AddCommentResponse(response=1)
 
     def Update(self, request, context):
+        mydb = mysql.connector.connect(
+            host="172.19.0.2",
+                user="root",
+                password='1234'
+        )
+        mycursor = mydb.cursor()
+        mydb.database = "nonduplicatesongsdatabase"
         query = "UPDATE nonduplicatesongsdatabase.comments SET comment = %s WHERE user_id = %d AND song_id = %d AND comment_id =%d;"
         mycursor.execute(query, (request.comment, request.user_id, request.song_id,))
         print("Updated comment. The new comment is: ", request.comment)
+        mydb.close()
         return UpdateCommentResponse(response=1)
 
     def Remove(self, request, context):
+        mydb = mysql.connector.connect(
+            host="172.19.0.2",
+                user="root",
+                password='1234'
+        )
+        mycursor = mydb.cursor()
+        mydb.database = "nonduplicatesongsdatabase"
         query = "DELETE FROM nonduplicatesongsdatabase.comments WHERE user_id = %d AND song_id = %d AND comment_id = %d;"
         mycursor.execute(query, (request.user_id, request.song_id,))
         print("Removed comment for user", request.user_id, "and song", request.song_id)
+        mydb.close()
         return RemoveCommentResponse(response=1)
 
 class SongDetails(songDetails_pb2_grpc.SongDetailsServicer):
     def GetSongDetails(self, request, context):
+        mydb = mysql.connector.connect(
+            host="172.19.0.2",
+                user="root",
+                password='1234'
+        )
+        mycursor = mydb.cursor()
+        mydb.database = "nonduplicatesongsdatabase"
         song_id = request.id
         song_query = "SELECT * FROM Songs WHERE song_id = %s"
         mycursor.execute(song_query, (song_id,))
@@ -91,6 +122,7 @@ class SongDetails(songDetails_pb2_grpc.SongDetailsServicer):
             comments.append(Comment(comment_id=comment_id, user_id=user_id, song_id=song_id, comment=comment_text))
 
         song = SongDetail(song_id=song_id, title=title, artists=artists, url=url, numtimesincharts=numtimesincharts, numcountrydif=numcountrydif, comments=comments)
+        mydb.close()
         return songDetails_pb2.GetSongDetailsResponse(song=song)
 
 

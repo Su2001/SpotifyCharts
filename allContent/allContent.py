@@ -8,18 +8,19 @@ from grpc_interceptor import ExceptionToStatusInterceptor
 import topCharts_pb2
 import topCharts_pb2_grpc
 import mysql.connector
-mydb = mysql.connector.connect(
-    host="172.18.0.2",
-    user="root",
-    password="1234"
-)
-mycursor = mydb.cursor()
-mydb.database = "allcontentdatabase"
+
 
 app = Flask(__name__)
 
 class TopCharts(topCharts_pb2_grpc.TopChartsServicer):
     def GetTopCharts(self, request, context):
+        mydb = mysql.connector.connect(
+            host="172.19.0.2",
+            user="root",
+            password="1234"
+        )
+        mycursor = mydb.cursor()
+        mydb.database = "allcontentdatabase"
         query = "SELECT song_id, title, `rank`, artist, chart FROM allcontentdatabase.songs WHERE date = %s AND region = %s"
         mycursor.execute(query, (request.date, request.country,))
         result = mycursor.fetchall()
@@ -33,7 +34,8 @@ class TopCharts(topCharts_pb2_grpc.TopChartsServicer):
                 chart=row[4]
             )
             songs.append(song)
-            print("Fetched song:", song)
+            # print("Fetched song:", song)
+        mydb.close()
         return topCharts_pb2.GetTopChartsResponse(songs=songs)
 
 

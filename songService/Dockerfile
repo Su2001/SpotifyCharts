@@ -14,4 +14,3 @@ RUN python -m grpc_tools.protoc -I ../protobufs --python_out=. \
 
 EXPOSE 50051
 ENTRYPOINT [ "python", "songService.py" ]
-
