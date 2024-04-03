@@ -120,7 +120,20 @@ mycursor.execute('''CREATE TABLE Comments (
         comment TEXT
         )
 ''')
+mydb.commit()
 print("Table Comments created!")
+comments_list = [
+    (1, 1, 1, "Great song!"),
+    (2, 2, 1, "Love it!"),
+    (3, 3, 2, "Awesome track!"),
+    (4, 4, 3, "This song is fire!")
+]
+sql_query = '''INSERT INTO Comments (user_id, song_id, comment) VALUES (%s, %s, %s)'''
+mycursor.executemany(sql_query, comments_list)
+mydb.commit()
+print("Data inserted into table Comments in nonduplicatesongsdatabase")
+
+
 df_spotify_unique = df_spotify.drop_duplicates(subset=['title', 'artist']).copy()
 # Calculate numtimesincharts and numcountrydif
 numtimesincharts = df_spotify.groupby(['title', 'artist']).size().reset_index(name='numtimesincharts')
@@ -158,6 +171,18 @@ mycursor.execute("""
         password VARCHAR(255)
     )
 """)
+mydb.commit()
+
+users_list = [
+    ('Bruno', 'Bruno@example.com', 'password123'),
+    ('Su', 'Su@example.com', 'password456'),
+    ('Ana', 'Ana@example.com', 'password789'),
+    ('Daniel', 'Daniel@example.com', 'password000')
+]
+
+sql_query = '''INSERT INTO users (username, email, password) VALUES (%s, %s, %s)'''
+mycursor.executemany(sql_query, users_list)
+mydb.commit()
 print("Table 'users' created successfully")
 
 mycursor.execute("DROP TABLE IF EXISTS  playlists")
@@ -170,7 +195,22 @@ mycursor.execute("""
         FOREIGN KEY (user_id) REFERENCES users(user_id)
     )
 """)
+mydb.commit()
 print("Table 'playlists' created successfully")
+# Insert examples into 'playlists' table
+playlists_list = [
+    (1, 1),
+    (1, 2),
+    (2, 3),
+    (3, 1),
+    (4, 2)
+]
+
+sql_query = '''INSERT INTO playlists (user_id, song_id) VALUES (%s, %s)'''
+mycursor.executemany(sql_query, playlists_list)
+mydb.commit()
+
+print("Data inserted into table playlists in usersdatabase")
 
 mydb.close()
 
