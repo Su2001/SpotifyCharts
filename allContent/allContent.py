@@ -21,7 +21,7 @@ class TopCharts(topCharts_pb2_grpc.TopChartsServicer):
         )
         mycursor = mydb.cursor()
         mydb.database = "allcontentdatabase"
-        query = "SELECT song_id, title, `rank`, artist, chart FROM allcontentdatabase.songs WHERE date = %s AND region = %s"
+        query = "SELECT song_id, title, `rank`, artist, chart FROM allcontentdatabase.Songs WHERE date = %s AND region = %s"
         mycursor.execute(query, (request.date, request.country,))
         result = mycursor.fetchall()
         songs = []

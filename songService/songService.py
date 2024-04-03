@@ -46,7 +46,7 @@ class Search(search_pb2_grpc.SearchServicer):
                 artists=row[2]
             )
             songs.append(song)
-            print("Fetched song:", song)
+            # print("Fetched song:", song)
         mydb.close()
         return search_pb2.GetSearchResponse(songs=songs)
 
@@ -59,7 +59,7 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
         )
         mycursor = mydb.cursor()
         mydb.database = "nonduplicatesongsdatabase"
-        query = "INSERT INTO nonduplicatesongsdatabase.comments (user_id, song_id, comment) VALUES (%d, %d, %s);"
+        query = "INSERT INTO nonduplicatesongsdatabase.Comments (user_id, song_id, comment) VALUES (%d, %d, %s);"
         mycursor.execute(query, (request.user_id, request.song_id, request.comment,))
         print("Inserted comment: ", request.user_id, request.song_id, request.comment)
         mydb.close()
@@ -73,7 +73,7 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
         )
         mycursor = mydb.cursor()
         mydb.database = "nonduplicatesongsdatabase"
-        query = "UPDATE nonduplicatesongsdatabase.comments SET comment = %s WHERE user_id = %d AND song_id = %d AND comment_id =%d;"
+        query = "UPDATE nonduplicatesongsdatabase.Comments SET comment = %s WHERE user_id = %d AND song_id = %d AND comment_id =%d;"
         mycursor.execute(query, (request.comment, request.user_id, request.song_id,))
         print("Updated comment. The new comment is: ", request.comment)
         mydb.close()
@@ -87,7 +87,7 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
         )
         mycursor = mydb.cursor()
         mydb.database = "nonduplicatesongsdatabase"
-        query = "DELETE FROM nonduplicatesongsdatabase.comments WHERE user_id = %d AND song_id = %d AND comment_id = %d;"
+        query = "DELETE FROM nonduplicatesongsdatabase.Comments WHERE user_id = %d AND song_id = %d AND comment_id = %d;"
         mycursor.execute(query, (request.user_id, request.song_id,))
         print("Removed comment for user", request.user_id, "and song", request.song_id)
         mydb.close()
@@ -123,7 +123,7 @@ class SongDetails(songDetails_pb2_grpc.SongDetailsServicer):
 
         song = SongDetail(song_id=song_id, title=title, artists=artists, url=url, numtimesincharts=numtimesincharts, numcountrydif=numcountrydif, comments=comments)
         mydb.close()
-        return songDetails_pb2.GetSongDetailsResponse(song=song)
+        return GetSongDetailsResponse(song=song)
 
 
 def serve():
