@@ -46,25 +46,25 @@ def get_PlayList():
 
 @app.route("/premium/playlist/<int:song_id>", methods=["POST"])
 def add_PlayList(song_id):
-    user_id = request.args.get("user_id")
+    user_id = str(request.json.get("user_id"))
 
     #grpc
     requestAux = ModifyPlayListRequest(user_id = int(user_id), song_id = song_id)
     response = playList_client.Add(requestAux)
     if response.response == -1:
         return("ERROR, Add failed") 
-    return jsonify(response)
+    return jsonify("Add success")
 
 @app.route("/premium/playlist/<int:song_id>", methods=["DELETE"])
 def remove_PlayList(song_id):
-    user_id = request.args.get("user_id")
+    user_id = str(request.args.get("user_id"))
 
     #grpc
     requestAux = ModifyPlayListRequest(user_id = int(user_id), song_id = song_id)
     response = playList_client.Remove(requestAux)
     if response.response == -1:
         return("ERROR, Remove failed") 
-    return jsonify(response)
+    return jsonify("Remove success")
 
 #if __name__ == "__main__":
  #   app.run(host="0.0.0.0", debug=True)

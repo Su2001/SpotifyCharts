@@ -20,7 +20,7 @@ import playlist_pb2_grpc
 class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
     def Add(self, request, context):
         mydb = mysql.connector.connect(
-            host="172.21.0.2",
+            host="172.19.0.2",
             user="root",
             password="1234"
         )
@@ -36,13 +36,14 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
             return PlayListResponse(response=-1)
         
         print("Inserted comment: ", request.user_id, request.song_id)
+        mydb.commit()
         mydb.close()
         return PlayListResponse(response=1)
 
     def Remove(self, request, context):
         #interacte bd
         mydb = mysql.connector.connect(
-            host="172.21.0.2",
+            host="172.19.0.2",
             user="root",
             password="1234"
         )
@@ -55,21 +56,24 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
             mydb.close()
             return PlayListResponse(response=-1)
         print("Removed a song for user", request.user_id, "and song", request.song_id)
+        mydb.commit()
         mydb.close()
         return PlayListResponse(response=1)
 
     def Get(self, request, context):
         #interacte bd
         mydb = mysql.connector.connect(
-            host="172.21.0.2",
+            host="172.19.0.2",
             user="root",
             password="1234"
         )
         mycursor = mydb.cursor()
         mydb.database = "usersdatabase"
+        
         # try:
         query = "SELECT song_id FROM usersdatabase.playlists WHERE user_id = %s"
         mycursor.execute(query, (request.user_id,))
+
         result = mycursor.fetchall()
         mydb.close()
         return GetPlayListResponse(response = 1,songs=result) 
