@@ -29,7 +29,7 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
         
         #interacte bd
         try:
-            query = "INSERT INTO usersdatabase.playlists (user_id, song_id) VALUES (%d, %d);"
+            query = "INSERT INTO usersdatabase.playlists (user_id, song_id) VALUES (%s, %s);"
             mycursor.execute(query, (request.user_id, request.song_id,))
         except:
             mydb.close()
@@ -49,7 +49,7 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
         mycursor = mydb.cursor()
         mydb.database = "usersdatabase"
         try:
-            query = "DELETE FROM usersdatabase.playlists WHERE user_id = %d AND song_id = %d;"
+            query = "DELETE FROM usersdatabase.playlists WHERE user_id = %s AND song_id = %s;"
             mycursor.execute(query, (request.user_id, request.song_id,))
         except:
             mydb.close()
@@ -68,7 +68,7 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
         mycursor = mydb.cursor()
         mydb.database = "usersdatabase"
         try:
-            query = "SELECT song_id FROM usersdatabase.playlists WHERE user_id = %d;"
+            query = "SELECT song_id FROM usersdatabase.playlists WHERE user_id = %s;"
             select_term = '%' + request.song_id + '%'  
             mycursor.execute(query, (select_term,))
             result = mycursor.fetchall()

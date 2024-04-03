@@ -123,16 +123,15 @@ mycursor.execute('''CREATE TABLE Comments (
 mydb.commit()
 print("Table Comments created!")
 comments_list = [
-    (1, 1, 1, "Great song!"),
-    (2, 2, 1, "Love it!"),
-    (3, 3, 2, "Awesome track!"),
-    (4, 4, 3, "This song is fire!")
+    (1, 1, "Great song!"),
+    (2, 1, "Love it!"),
+    (3, 2, "Awesome track!"),
+    (4, 3, "This song is fire!")
 ]
 sql_query = '''INSERT INTO Comments (user_id, song_id, comment) VALUES (%s, %s, %s)'''
 mycursor.executemany(sql_query, comments_list)
 mydb.commit()
 print("Data inserted into table Comments in nonduplicatesongsdatabase")
-
 
 df_spotify_unique = df_spotify.drop_duplicates(subset=['title', 'artist']).copy()
 # Calculate numtimesincharts and numcountrydif

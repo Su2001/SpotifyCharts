@@ -59,7 +59,7 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
         )
         mycursor = mydb.cursor()
         mydb.database = "nonduplicatesongsdatabase"
-        query = "INSERT INTO nonduplicatesongsdatabase.Comments (user_id, song_id, comment) VALUES (%d, %d, %s);"
+        query = "INSERT INTO nonduplicatesongsdatabase.Comments (user_id, song_id, comment) VALUES (%s, %s, %s);"
         mycursor.execute(query, (request.user_id, request.song_id, request.comment,))
         print("Inserted comment: ", request.user_id, request.song_id, request.comment)
         mydb.close()
@@ -73,7 +73,7 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
         )
         mycursor = mydb.cursor()
         mydb.database = "nonduplicatesongsdatabase"
-        query = "UPDATE nonduplicatesongsdatabase.Comments SET comment = %s WHERE user_id = %d AND song_id = %d AND comment_id =%d;"
+        query = "UPDATE nonduplicatesongsdatabase.Comments SET comment = %s WHERE user_id = %s AND song_id = %s AND comment_id =%s;"
         mycursor.execute(query, (request.comment, request.user_id, request.song_id,))
         print("Updated comment. The new comment is: ", request.comment)
         mydb.close()
@@ -87,7 +87,7 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
         )
         mycursor = mydb.cursor()
         mydb.database = "nonduplicatesongsdatabase"
-        query = "DELETE FROM nonduplicatesongsdatabase.Comments WHERE user_id = %d AND song_id = %d AND comment_id = %d;"
+        query = "DELETE FROM nonduplicatesongsdatabase.Comments WHERE user_id = %s AND song_id = %s AND comment_id = %s;"
         mycursor.execute(query, (request.user_id, request.song_id,))
         print("Removed comment for user", request.user_id, "and song", request.song_id)
         mydb.close()
