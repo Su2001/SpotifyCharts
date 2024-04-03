@@ -15,7 +15,7 @@ app = Flask(__name__)
 class TopCharts(topCharts_pb2_grpc.TopChartsServicer):
     def GetTopCharts(self, request, context):
         mydb = mysql.connector.connect(
-            host="172.19.0.2",
+            host="172.21.0.2",
             user="root",
             password="1234"
         )

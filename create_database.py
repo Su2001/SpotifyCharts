@@ -31,7 +31,7 @@ data_dict = json.loads(json_data_decoded)
 df_spotify = pd.DataFrame(data_dict)
 
 mydb = mysql.connector.connect(
-    host="172.19.0.2",
+    host="172.21.0.2",
     user="root",
     password='1234'
 )
@@ -51,7 +51,7 @@ for desired_database in desired_databases:
         print(f"Database '{desired_database}' already exists")
 # Connect to the allcontentdatabase
 mydb = mysql.connector.connect(
-        host="172.19.0.2",
+        host="172.21.0.2",
         user="root",
         password='1234',
         database='allcontentdatabase'
@@ -93,7 +93,7 @@ mydb.close()
 
 # Connect to the nonduplicatesongsdatabase
 mydb = mysql.connector.connect(
-        host="172.19.0.2",
+        host="172.21.0.2",
         user="root",
         password='1234',
         database='nonduplicatesongsdatabase'
@@ -153,7 +153,7 @@ mydb.close()
 
 # Connect to the usersdatabase
 mydb = mysql.connector.connect(
-        host="172.19.0.2",
+        host="172.21.0.2",
         user="root",
         password='1234',
         database='usersdatabase'

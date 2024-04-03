@@ -20,7 +20,7 @@ import playlist_pb2_grpc
 class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
     def Add(self, request, context):
         mydb = mysql.connector.connect(
-            host="172.19.0.2",
+            host="172.21.0.2",
             user="root",
             password="1234"
         )
@@ -29,7 +29,7 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
         
         #interacte bd
         try:
-            query = "INSERT INTO usersdatabase.playlists (user_id, song_id) VALUES (%s, %s);"
+            query = "INSERT INTO usersdatabase.playlists (user_id, song_id) VALUES (%s, %s)"
             mycursor.execute(query, (request.user_id, request.song_id,))
         except:
             mydb.close()
@@ -42,14 +42,14 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
     def Remove(self, request, context):
         #interacte bd
         mydb = mysql.connector.connect(
-            host="172.19.0.2",
+            host="172.21.0.2",
             user="root",
             password="1234"
         )
         mycursor = mydb.cursor()
         mydb.database = "usersdatabase"
         try:
-            query = "DELETE FROM usersdatabase.playlists WHERE user_id = %s AND song_id = %s;"
+            query = "DELETE FROM usersdatabase.playlists WHERE user_id = %s AND song_id = %s"
             mycursor.execute(query, (request.user_id, request.song_id,))
         except:
             mydb.close()
@@ -61,22 +61,21 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
     def Get(self, request, context):
         #interacte bd
         mydb = mysql.connector.connect(
-            host="172.19.0.2",
+            host="172.21.0.2",
             user="root",
             password="1234"
         )
         mycursor = mydb.cursor()
         mydb.database = "usersdatabase"
-        try:
-            query = "SELECT song_id FROM usersdatabase.playlists WHERE user_id = %s;"
-            select_term = '%' + request.song_id + '%'  
-            mycursor.execute(query, (select_term,))
-            result = mycursor.fetchall()
-            mydb.close()
-            return GetPlayListResponse(response = 1,songs=result) 
-        except:
-            mydb.close()
-            return GetPlayListResponse(response = -1,songs=[]) 
+        # try:
+        query = "SELECT song_id FROM usersdatabase.playlists WHERE user_id = %s"
+        mycursor.execute(query, (request.user_id,))
+        result = mycursor.fetchall()
+        mydb.close()
+        return GetPlayListResponse(response = 1,songs=result) 
+        # except:
+        #     mydb.close()
+        #     return GetPlayListResponse(response = -1,songs=[]) 
            
 
 def serve():

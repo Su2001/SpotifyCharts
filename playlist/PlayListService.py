@@ -14,8 +14,8 @@ playList_client = PlayListServiceStub(playList_channel)
 def get_yList():
     user_id = 1
     #grpc
-    request = GetPlayListRequest(user_id=user_id)
-    response = playList_client.Get(request)
+    requestAux = GetPlayListRequest(user_id=user_id)
+    response = playList_client.Get(requestAux)
     if response.response == -1:
         return ("ERROR, the user is not found") 
     a = list(response.songs)
@@ -31,8 +31,8 @@ def get_yList():
 def get_PlayList():
     user_id = request.args.get("user_id")
     #grpc
-    request = GetPlayListRequest(user_id=user_id)
-    response = playList_client.Get(request)
+    requestAux = GetPlayListRequest(user_id=int(user_id))
+    response = playList_client.Get(requestAux)
     if response.response == -1:
         return ("ERROR, the user is not found") 
     a = list(response.songs)
@@ -49,8 +49,8 @@ def add_PlayList(song_id):
     user_id = request.args.get("user_id")
 
     #grpc
-    request = ModifyPlayListRequest(user_id = user_id, song_id = song_id)
-    response = playList_client.Add(request)
+    requestAux = ModifyPlayListRequest(user_id = int(user_id), song_id = song_id)
+    response = playList_client.Add(requestAux)
     if response.response == -1:
         return("ERROR, Add failed") 
     return jsonify(response)
@@ -60,8 +60,8 @@ def remove_PlayList(song_id):
     user_id = request.args.get("user_id")
 
     #grpc
-    request = ModifyPlayListRequest(user_id = user_id, song_id = song_id)
-    response = playList_client.Remove(request)
+    requestAux = ModifyPlayListRequest(user_id = int(user_id), song_id = song_id)
+    response = playList_client.Remove(requestAux)
     if response.response == -1:
         return("ERROR, Remove failed") 
     return jsonify(response)

@@ -27,7 +27,7 @@ import mysql.connector
 class Search(search_pb2_grpc.SearchServicer):
     def GetSearch(self, request, context):
         mydb = mysql.connector.connect(
-            host="172.19.0.2",
+            host="172.21.0.2",
                 user="root",
                 password='1234'
         )
@@ -53,13 +53,13 @@ class Search(search_pb2_grpc.SearchServicer):
 class CommentService(songComments_pb2_grpc.CommentServiceServicer):
     def Add(self, request, context):
         mydb = mysql.connector.connect(
-            host="172.19.0.2",
+            host="172.21.0.2",
                 user="root",
                 password='1234'
         )
         mycursor = mydb.cursor()
         mydb.database = "nonduplicatesongsdatabase"
-        query = "INSERT INTO nonduplicatesongsdatabase.Comments (user_id, song_id, comment) VALUES (%s, %s, %s);"
+        query = "INSERT INTO nonduplicatesongsdatabase.Comments (user_id, song_id, comment) VALUES (%s, %s, %s)"
         mycursor.execute(query, (request.user_id, request.song_id, request.comment,))
         print("Inserted comment: ", request.user_id, request.song_id, request.comment)
         mydb.close()
@@ -67,13 +67,13 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
 
     def Update(self, request, context):
         mydb = mysql.connector.connect(
-            host="172.19.0.2",
+            host="172.21.0.2",
                 user="root",
                 password='1234'
         )
         mycursor = mydb.cursor()
         mydb.database = "nonduplicatesongsdatabase"
-        query = "UPDATE nonduplicatesongsdatabase.Comments SET comment = %s WHERE user_id = %s AND song_id = %s AND comment_id =%s;"
+        query = "UPDATE nonduplicatesongsdatabase.Comments SET comment = %s WHERE user_id = %s AND song_id = %s AND comment_id =%s"
         mycursor.execute(query, (request.comment, request.user_id, request.song_id,))
         print("Updated comment. The new comment is: ", request.comment)
         mydb.close()
@@ -81,13 +81,13 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
 
     def Remove(self, request, context):
         mydb = mysql.connector.connect(
-            host="172.19.0.2",
+            host="172.21.0.2",
                 user="root",
                 password='1234'
         )
         mycursor = mydb.cursor()
         mydb.database = "nonduplicatesongsdatabase"
-        query = "DELETE FROM nonduplicatesongsdatabase.Comments WHERE user_id = %s AND song_id = %s AND comment_id = %s;"
+        query = "DELETE FROM nonduplicatesongsdatabase.Comments WHERE user_id = %s AND song_id = %s AND comment_id = %s"
         mycursor.execute(query, (request.user_id, request.song_id,))
         print("Removed comment for user", request.user_id, "and song", request.song_id)
         mydb.close()
@@ -96,7 +96,7 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
 class SongDetails(songDetails_pb2_grpc.SongDetailsServicer):
     def GetSongDetails(self, request, context):
         mydb = mysql.connector.connect(
-            host="172.19.0.2",
+            host="172.21.0.2",
                 user="root",
                 password='1234'
         )

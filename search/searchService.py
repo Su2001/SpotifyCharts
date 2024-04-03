@@ -22,7 +22,7 @@ def render_homepage():
 
 @app.route("/regular/search")
 def search():
-    songAux = request.args.get("song")        #maybe no futuro arranjar valores default para isto
+    songAux = request.args.get("song")      
     
     if songAux:
         search_request = search_pb2.GetSearchRequest(songname=songAux)
