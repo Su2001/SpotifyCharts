@@ -62,6 +62,7 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
         query = "INSERT INTO nonduplicatesongsdatabase.Comments (user_id, song_id, comment) VALUES (%s, %s, %s)"
         mycursor.execute(query, (request.user_id, request.song_id, request.comment,))
         print("Inserted comment: ", request.user_id, request.song_id, request.comment)
+        mydb.commit()
         mydb.close()
         return AddCommentResponse(response=1)
 
@@ -76,6 +77,7 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
         query = "UPDATE nonduplicatesongsdatabase.Comments SET comment = %s WHERE user_id = %s AND song_id = %s AND comment_id =%s"
         mycursor.execute(query, (request.comment, request.user_id, request.song_id,))
         print("Updated comment. The new comment is: ", request.comment)
+        mydb.commit()
         mydb.close()
         return UpdateCommentResponse(response=1)
 
@@ -90,6 +92,7 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
         query = "DELETE FROM nonduplicatesongsdatabase.Comments WHERE user_id = %s AND song_id = %s AND comment_id = %s"
         mycursor.execute(query, (request.user_id, request.song_id,))
         print("Removed comment for user", request.user_id, "and song", request.song_id)
+        mydb.commit()
         mydb.close()
         return RemoveCommentResponse(response=1)
 
@@ -122,6 +125,7 @@ class SongDetails(songDetails_pb2_grpc.SongDetailsServicer):
             comments.append(Comment(comment_id=comment_id, user_id=user_id, song_id=song_id, comment=comment_text))
 
         song = SongDetail(song_id=song_id, title=title, artists=artists, url=url, numtimesincharts=numtimesincharts, numcountrydif=numcountrydif, comments=comments)
+        mydb.commit()
         mydb.close()
         return GetSongDetailsResponse(song=song)
 

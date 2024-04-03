@@ -36,14 +36,14 @@ def render_homepage():
 @app.route("/premium/song-details/<int:song_id>/comment", methods=["POST"])
 def addComment(song_id):
     # Get the comment data from the request body
-    user_id = request.form.get("user_id")
-    comment = request.form.get("comment")
+    user_id = request.args.get("user_id")
+    comment = request.args.get("comment")
 
     print("User_id = ", user_id)
     print("Comment = ", comment)
 
     #grpc
-    comment_request = AddCommentRequest(user_id = (user_id), song_id = song_id, comment = comment)
+    comment_request = AddCommentRequest(user_id = int(user_id), song_id = song_id, comment = comment)
     comment_response = songComments_client.Add(comment_request)
 
     if comment_response.response == -1:
@@ -56,8 +56,8 @@ def addComment(song_id):
 def updateComment(song_id, comment_id):
 
     # Get the comment data from the request body
-    user_id = request.form.get("user_id")
-    comment = request.form.get("comment")
+    user_id = request.args.get("user_id")
+    comment = request.args.get("comment")
 
     print("User_id = ", user_id)
     print("Comment = ", comment)
@@ -75,7 +75,7 @@ def updateComment(song_id, comment_id):
 def deleteComment(song_id, comment_id):
 
     # Get the comment data from the request body
-    user_id = request.form.get("user_id")
+    user_id = request.args.get("user_id")
 
     print("User_id = ", user_id)
     #grpc
