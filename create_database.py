@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import json
 from google.cloud import storage
-
+import socket
 # Define the Google Cloud Storage bucket and JSON file path
 bucket_name = 'spotifychartsgroup01bucket'
 file_low_data_path = 'charts_low_data.json'
@@ -30,11 +30,18 @@ data_dict = json.loads(json_data_decoded)
 # Convert the dictionary into a Pandas DataFrame
 df_spotify = pd.DataFrame(data_dict)
 
+db_container_name = 'spotifychartsgroup1_db_1'
+# try:
+db_ip = socket.gethostbyname(db_container_name)
+# except socket.gaierror as e:
+#     print(f"Failed to resolve IP address for {db_container_name}: {e}")
+#     return None
 mydb = mysql.connector.connect(
-    host="172.21.0.2",
+    host=db_ip,
     user="root",
     password='1234'
 )
+
 
 mycursor = mydb.cursor()
 mycursor.execute("SHOW DATABASES")
@@ -51,7 +58,7 @@ for desired_database in desired_databases:
         print(f"Database '{desired_database}' already exists")
 # Connect to the allcontentdatabase
 mydb = mysql.connector.connect(
-        host="172.21.0.2",
+        host=db_ip,
         user="root",
         password='1234',
         database='allcontentdatabase'
@@ -93,7 +100,7 @@ mydb.close()
 
 # Connect to the nonduplicatesongsdatabase
 mydb = mysql.connector.connect(
-        host="172.21.0.2",
+        host=db_ip,
         user="root",
         password='1234',
         database='nonduplicatesongsdatabase'
@@ -153,7 +160,7 @@ mydb.close()
 
 # Connect to the usersdatabase
 mydb = mysql.connector.connect(
-        host="172.21.0.2",
+        host=db_ip,
         user="root",
         password='1234',
         database='usersdatabase'

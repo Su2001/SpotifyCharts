@@ -14,15 +14,19 @@ from playlist_pb2 import(
 )
 
 import playlist_pb2_grpc
-
+import socket
 
 
 class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
     def Add(self, request, context):
+        db_container_name = 'spotifychartsgroup1_db_1'
+
+        db_ip = socket.gethostbyname(db_container_name)
+
         mydb = mysql.connector.connect(
-            host="172.19.0.2",
-            user="root",
-            password="1234"
+            host=db_ip,
+                user="root",
+                password='1234'
         )
         mycursor = mydb.cursor()
         mydb.database = "usersdatabase"
@@ -42,10 +46,14 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
 
     def Remove(self, request, context):
         #interacte bd
+        db_container_name = 'spotifychartsgroup1_db_1'
+       
+        db_ip = socket.gethostbyname(db_container_name)
+
         mydb = mysql.connector.connect(
-            host="172.19.0.2",
-            user="root",
-            password="1234"
+            host=db_ip,
+                user="root",
+                password='1234'
         )
         mycursor = mydb.cursor()
         mydb.database = "usersdatabase"
@@ -62,10 +70,14 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
 
     def Get(self, request, context):
         #interacte bd
+        db_container_name = 'spotifychartsgroup1_db_1'
+
+        db_ip = socket.gethostbyname(db_container_name)
+
         mydb = mysql.connector.connect(
-            host="172.19.0.2",
-            user="root",
-            password="1234"
+            host=db_ip,
+                user="root",
+                password='1234'
         )
         mycursor = mydb.cursor()
         mydb.database = "usersdatabase"
@@ -75,8 +87,13 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
         mycursor.execute(query, (request.user_id,))
 
         result = mycursor.fetchall()
+        songs = []
+        for row in result:
+            song = id=row[0]
+
+            songs.append(song)
         mydb.close()
-        return GetPlayListResponse(response = 1,songs=result) 
+        return GetPlayListResponse(response = 1,songs=songs) 
         # except:
         #     mydb.close()
         #     return GetPlayListResponse(response = -1,songs=[]) 

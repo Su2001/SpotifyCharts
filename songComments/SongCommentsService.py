@@ -63,7 +63,7 @@ def updateComment(song_id, comment_id):
     print("Comment = ", comment)
 
     #grpc
-    comment_request = UpdateCommentRequest(user_id = int(user_id), song_id = song_id, comment_id = int(comment_id), comment = comment)
+    comment_request = UpdateCommentRequest(user_id = int(user_id), song_id = song_id, comment_id = comment_id, comment = comment)
     comment_response = songComments_client.Update(comment_request)
 
     if comment_response.response == -1:

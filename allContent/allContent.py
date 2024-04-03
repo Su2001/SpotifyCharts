@@ -8,16 +8,20 @@ from grpc_interceptor import ExceptionToStatusInterceptor
 import topCharts_pb2
 import topCharts_pb2_grpc
 import mysql.connector
-
+import socket
 
 app = Flask(__name__)
 
 class TopCharts(topCharts_pb2_grpc.TopChartsServicer):
     def GetTopCharts(self, request, context):
+        db_container_name = 'spotifychartsgroup1_db_1'
+       
+        db_ip = socket.gethostbyname(db_container_name)
+
         mydb = mysql.connector.connect(
-            host="172.21.0.2",
-            user="root",
-            password="1234"
+            host=db_ip,
+                user="root",
+                password='1234'
         )
         mycursor = mydb.cursor()
         mydb.database = "allcontentdatabase"
