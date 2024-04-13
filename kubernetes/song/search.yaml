@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: searchservice-d
+  labels:
+    app: searchservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: searchservice
+  template:
+    metadata:
+      labels:
+        app: searchservice
+    spec:
+      containers:
+      - name: searchservice
+        image: su2001/searchservice
+        ports:
+          - containerPort: 5002
+        env:
+          - name: SEARCH_HOST
+            value: "songservice-service"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: searchservice-service
+  labels:
+    app: searchservice
+spec:
+  type: NodePort
+  selector:
+    app: searchservice
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      nodePort: 30002
+      targetPort: 5002
+
+

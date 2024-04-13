@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: playlist-d
+  labels:
+    app: playlist
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: playlist
+  template:
+    metadata:
+      labels:
+        app: playlist
+    spec:
+      containers:
+      - name: playlist
+        image: su2001/playlist
+        ports:
+          - containerPort: 8080
+        env:
+          - name: USERSERVICE_HOST
+            value: "userservice-service"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: playlist-service
+  labels:
+    app: playlist
+spec:
+  type: NodePort
+  selector:
+    app: playlist
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      nodePort: 30000
+      targetPort: 8080
+

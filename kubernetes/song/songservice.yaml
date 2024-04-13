@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: songservice-d
+  labels:
+    app: songservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: songservice
+  template:
+    metadata:
+      labels:
+        app: songservice
+    spec:
+      containers:
+      - name: songservice
+        image: su2001/songservice
+        ports:
+          - containerPort: 50051
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: songservice-service
+  labels:
+    app: songservice
+spec:
+  type: ClusterIP
+
+  selector:
+    app: songservice
+  ports:
+    - name: grpc
+      port: 50051
+      targetPort: 50051
+
