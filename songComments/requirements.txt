@@ -1,4 +1,25 @@
 grpc-interceptor ~= 0.11.0
 grpcio-tools ~= 1.30
-flask ~= 3.0.2
 pytest ~= 5.4
+flask ~= 2.2.3
+Jinja2 ~= 3.1.2
+
+six
+cachetools
+certifi
+chardet
+click
+google-auth
+google-auth-oauthlib
+idna
+itsdangerous
+Jinja2
+MarkupSafe
+oauthlib
+pyasn1
+pyasn1-modules
+requests
+requests-oauthlib
+rsa
+urllib3
+Werkzeug
