@@ -1,22 +1,44 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress
+  name: nginx-ingress
 spec:
-  ingressClassName: ingress
-  defaultBackend:
-    service:
-      name: service
-      port:
-        number: 80
+  ingressClassName: nginx
   rules:
   - http:
       paths:
-      - path: /
+      - path: /premium/song-details/
         pathType: Prefix
         backend:
           service:
-            name: service
+            name: songcomments-service
             port:
               number: 80
-
+      - path: /premium/playlist
+        pathType: Prefix
+        backend:
+          service:
+            name: playlist-service
+            port:
+              number: 80    
+      - path: /regular/song-details/
+        pathType: Prefix
+        backend:
+          service:
+            name: songdetails-service
+            port:
+              number: 80 
+      - path: /regular/search
+        pathType: Prefix
+        backend:
+          service:
+            name: searchservice-service
+            port:
+              number: 80
+      - path: /regular/top-charts
+        pathType: Prefix
+        backend:
+          service:
+            name: topcharts-service
+            port:
+              number: 80
