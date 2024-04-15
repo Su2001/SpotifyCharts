@@ -19,12 +19,12 @@ import socket
 
 class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
     def Add(self, request, context):
-        db_container_name = 'spotifychartsgroup1_db_1'
+        # db_container_name = 'spotifychartsgroup1_db_1'
 
-        db_ip = socket.gethostbyname(db_container_name)
+        # db_ip = socket.gethostbyname(db_container_name)
 
         mydb = mysql.connector.connect(
-            host=db_ip,
+            host="34.34.73.69",
                 user="root",
                 password='1234'
         )
@@ -46,12 +46,12 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
 
     def Remove(self, request, context):
         #interacte bd
-        db_container_name = 'spotifychartsgroup1_db_1'
+        # db_container_name = 'spotifychartsgroup1_db_1'
        
-        db_ip = socket.gethostbyname(db_container_name)
+        # db_ip = socket.gethostbyname(db_container_name)
 
         mydb = mysql.connector.connect(
-            host=db_ip,
+            host="34.34.73.69",
                 user="root",
                 password='1234'
         )
@@ -70,12 +70,12 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
 
     def Get(self, request, context):
         #interacte bd
-        db_container_name = 'spotifychartsgroup1_db_1'
+        # db_container_name = 'spotifychartsgroup1_db_1'
 
-        db_ip = socket.gethostbyname(db_container_name)
+        # db_ip = socket.gethostbyname(db_container_name)
 
         mydb = mysql.connector.connect(
-            host=db_ip,
+            host="34.34.73.69",
                 user="root",
                 password='1234'
         )
