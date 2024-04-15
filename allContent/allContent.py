@@ -14,12 +14,12 @@ app = Flask(__name__)
 
 class TopCharts(topCharts_pb2_grpc.TopChartsServicer):
     def GetTopCharts(self, request, context):
-        db_container_name = 'spotifychartsgroup1_db_1'
+        # db_container_name = 'spotifychartsgroup1_db_1'
        
-        db_ip = socket.gethostbyname(db_container_name)
+        # db_ip = socket.gethostbyname(db_container_name)
 
         mydb = mysql.connector.connect(
-            host=db_ip,
+            host="34.34.73.69",
                 user="root",
                 password='1234'
         )

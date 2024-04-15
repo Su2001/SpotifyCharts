@@ -26,12 +26,12 @@ import mysql.connector
 
 class Search(search_pb2_grpc.SearchServicer):
     def GetSearch(self, request, context):
-        db_container_name = 'spotifychartsgroup1_db_1'
+        # db_container_name = 'spotifychartsgroup1_db_1'
         
-        db_ip = socket.gethostbyname(db_container_name)
+        # db_ip = socket.gethostbyname(db_container_name)
 
         mydb = mysql.connector.connect(
-            host=db_ip,
+            host="34.34.73.69",
                 user="root",
                 password='1234'
         )
@@ -56,12 +56,12 @@ class Search(search_pb2_grpc.SearchServicer):
 
 class CommentService(songComments_pb2_grpc.CommentServiceServicer):
     def Add(self, request, context):
-        db_container_name = 'spotifychartsgroup1_db_1'
+        # db_container_name = 'spotifychartsgroup1_db_1'
         
-        db_ip = socket.gethostbyname(db_container_name)
+        # db_ip = socket.gethostbyname(db_container_name)
 
         mydb = mysql.connector.connect(
-            host=db_ip,
+            host="34.34.73.69",
                 user="root",
                 password='1234'
         )
@@ -75,12 +75,12 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
         return AddCommentResponse(response=1)
 
     def Update(self, request, context):
-        db_container_name = 'spotifychartsgroup1_db_1'
+        # db_container_name = 'spotifychartsgroup1_db_1'
        
-        db_ip = socket.gethostbyname(db_container_name)
+        # db_ip = socket.gethostbyname(db_container_name)
 
         mydb = mysql.connector.connect(
-            host=db_ip,
+            host="34.34.73.69",
                 user="root",
                 password='1234'
         )
@@ -94,12 +94,12 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
         return UpdateCommentResponse(response=1)
 
     def Remove(self, request, context):
-        db_container_name = 'spotifychartsgroup1_db_1'
+        # db_container_name = 'spotifychartsgroup1_db_1'
        
-        db_ip = socket.gethostbyname(db_container_name)
+        # db_ip = socket.gethostbyname(db_container_name)
 
         mydb = mysql.connector.connect(
-            host=db_ip,
+            host="34.34.73.69",
                 user="root",
                 password='1234'
         )
@@ -116,13 +116,13 @@ class SongDetails(songDetails_pb2_grpc.SongDetailsServicer):
 
     def GetSongDetails(self, request, context):
         
-        db_container_name = 'spotifychartsgroup1_db_1'
+        # db_container_name = 'spotifychartsgroup1_db_1'
   
-        db_ip = socket.gethostbyname(db_container_name)
+        # db_ip = socket.gethostbyname(db_container_name)
 
 
         mydb = mysql.connector.connect(
-                host=db_ip,
+                host="34.34.73.69",
                 user="root",
                 password='1234'
         )
