@@ -6,7 +6,6 @@ import grpc
 import random
 import time
 from flask import Flask
-from prometheus_metrics import *
 
 app = Flask(__name__)
 

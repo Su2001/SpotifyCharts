@@ -8,6 +8,9 @@ import topCharts_pb2
 import topCharts_pb2_grpc
 import mysql.connector
 import socket
+from google.cloud.sql.connector import Connector
+import pymysql
+import sqlalchemy
 
 from health_pb2 import(
     HealthCheckRequest,
@@ -34,11 +37,27 @@ class HealthCheck(health_pb2_grpc.HealthServicer):
     def Watch(self, request, context):
         pass
 
+
 class TopCharts(topCharts_pb2_grpc.TopChartsServicer):
+
     def GetTopCharts(self, request, context):
-        # db_container_name = 'spotifychartsgroup1_db_1'
-       
-        # db_ip = socket.gethostbyname(db_container_name)
+
+        def init_connection_pool(connector: Connector) -> sqlalchemy.engine.Engine:
+            def getconn() -> pymysql.connections.Connection:
+                conn = connector.connect(
+                    "spotifychartsgroup01:europe-west4:spotifychartsgroup01database",
+                    "pymysql",
+                    user="root",
+                    password="1234",
+                    db="allcontentdatabase"
+                )
+                return conn
+            pool = sqlalchemy.create_engine(
+                "mysql+pymysql://",
+                creator=getconn,
+            )
+            return pool
+            
         global MAX
         global counter
         global lock
@@ -46,32 +65,26 @@ class TopCharts(topCharts_pb2_grpc.TopChartsServicer):
         counter = counter + 1
         lock.release()
 
-        mydb = mysql.connector.connect(
-            host="34.34.73.69",
-                user="root",
-                password='1234'
-        )
-        mycursor = mydb.cursor()
-        mydb.database = "allcontentdatabase"
-        query = "SELECT song_id, title, `rank`, artist, chart FROM allcontentdatabase.Songs WHERE date = %s AND region = %s"
-        mycursor.execute(query, (request.date, request.country,))
-        result = mycursor.fetchall()
-        songs = []
-        for row in result:
-            song = topCharts_pb2.Song(
-                id=row[0],
-                title=row[1],
-                rank=row[2],
-                artists=row[3],
-                chart=row[4]
-            )
-            songs.append(song)
-            # print("Fetched song:", song)
-        mydb.close()
-        lock.acquire()
-        counter = counter - 1
-        lock.release()
-        return topCharts_pb2.GetTopChartsResponse(songs=songs)
+        with Connector() as connector:
+            pool = init_connection_pool(connector)
+            with pool.connect() as db_conn:
+                result = db_conn.execute(sqlalchemy.text("SELECT * from Songs LIMIT 10")).fetchall()
+                songs = []
+                for row in result:
+                    print(row)
+                    song = topCharts_pb2.Song(
+                        id=row[0],
+                        title=row[1],
+                        rank=row[2],
+                        artists=row[3],
+                        chart=row[4]
+                    )
+                    print(song)
+                    songs.append(song)
+            lock.acquire()
+            counter = counter - 1
+            lock.release()
+            return topCharts_pb2.GetTopChartsResponse(songs=songs)
 
 
 def serve():

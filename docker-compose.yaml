@@ -13,8 +13,6 @@ services:
 
     userservice:
         image: userservice
-        depends_on:
-            - python_scripts
         networks:
             - microservices
 
@@ -31,15 +29,11 @@ services:
 
     songservice:
         image: songservice
-        depends_on:
-            - python_scripts
         networks:
             - microservices
 
     allcontentservice:
         image: allcontentservice
-        depends_on:
-            - python_scripts
         networks:
             - microservices
     
