@@ -22,6 +22,17 @@ spec:
         env:
         - name: TOPCHARTS_HOST
           value: "allcontentservice-service"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5001
+          initialDelaySeconds: 15
+          periodSeconds: 60
+        readinessProbe:
+          tcpSocket:
+            port: 5001
+          initialDelaySeconds: 20
+          periodSeconds: 30
 ---
 apiVersion: v1
 kind: Service
@@ -30,12 +41,12 @@ metadata:
   labels:
     app: topcharts
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: topcharts
   ports:
     - name: http
       protocol: TCP
       port: 80
-      nodePort: 30001
+      #nodePort: 30001
       targetPort: 5001

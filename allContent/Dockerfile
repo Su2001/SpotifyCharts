@@ -8,6 +8,8 @@ WORKDIR /service/allContent
 RUN pip install -r requirements.txt
 RUN python -m grpc_tools.protoc -I ../protobufs --python_out=. \
            --grpc_python_out=. ../protobufs/topCharts.proto
+RUN python -m grpc_tools.protoc -I ../protobufs --python_out=. \
+           --grpc_python_out=. ../protobufs/health.proto
 
 EXPOSE 50051
 ENTRYPOINT [ "python", "allContent.py" ]

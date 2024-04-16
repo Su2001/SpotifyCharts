@@ -19,6 +19,10 @@ def song_to_dict(song):
         "chart": song.chart
     }
 
+@app.route("/health")
+def healthCheck():
+    return jsonify("ok")
+
 @app.route("/regular/top-charts")
 def render_homepage():
     dateAux = request.args.get("date")

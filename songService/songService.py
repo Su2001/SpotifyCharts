@@ -23,13 +23,42 @@ from songDetails_pb2 import (
 
 import mysql.connector
 
+from health_pb2 import(
+    HealthCheckRequest,
+    HealthCheckResponse
+)
+import health_pb2_grpc
+from threading import Lock
+
+counter = 0
+MAX = 10
+lock = Lock()
+
+class HealthCheck(health_pb2_grpc.HealthServicer):
+
+    def Check(self, request, context):
+        global MAX
+        global counter
+        print("check")
+        if counter < MAX:
+            return HealthCheckResponse(status=1)
+        if counter == MAX:
+            return HealthCheckResponse(status=2)
+
+    def Watch(self, request, context):
+        pass
 
 class Search(search_pb2_grpc.SearchServicer):
     def GetSearch(self, request, context):
         # db_container_name = 'spotifychartsgroup1_db_1'
         
         # db_ip = socket.gethostbyname(db_container_name)
-
+        global MAX
+        global counter
+        global lock
+        lock.acquire()
+        counter = counter + 1
+        lock.release()
         mydb = mysql.connector.connect(
             host="34.34.73.69",
                 user="root",
@@ -52,6 +81,9 @@ class Search(search_pb2_grpc.SearchServicer):
             songs.append(song)
             # print("Fetched song:", song)
         mydb.close()
+        lock.acquire()
+        counter = counter - 1
+        lock.release()
         return search_pb2.GetSearchResponse(songs=songs)
 
 class CommentService(songComments_pb2_grpc.CommentServiceServicer):
@@ -59,7 +91,12 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
         # db_container_name = 'spotifychartsgroup1_db_1'
         
         # db_ip = socket.gethostbyname(db_container_name)
-
+        global MAX
+        global counter
+        global lock
+        lock.acquire()
+        counter = counter + 1
+        lock.release()
         mydb = mysql.connector.connect(
             host="34.34.73.69",
                 user="root",
@@ -72,13 +109,21 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
         print("Inserted comment: ", request.user_id, request.song_id, request.comment)
         mydb.commit()
         mydb.close()
+        lock.acquire()
+        counter = counter - 1
+        lock.release()
         return AddCommentResponse(response=1)
 
     def Update(self, request, context):
         # db_container_name = 'spotifychartsgroup1_db_1'
        
         # db_ip = socket.gethostbyname(db_container_name)
-
+        global MAX
+        global counter
+        global lock
+        lock.acquire()
+        counter = counter + 1
+        lock.release()
         mydb = mysql.connector.connect(
             host="34.34.73.69",
                 user="root",
@@ -91,13 +136,21 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
         print("Updated comment. The new comment is: ", request.comment)
         mydb.commit()
         mydb.close()
+        lock.acquire()
+        counter = counter - 1
+        lock.release()
         return UpdateCommentResponse(response=1)
 
     def Remove(self, request, context):
         # db_container_name = 'spotifychartsgroup1_db_1'
        
         # db_ip = socket.gethostbyname(db_container_name)
-
+        global MAX
+        global counter
+        global lock
+        lock.acquire()
+        counter = counter + 1
+        lock.release()
         mydb = mysql.connector.connect(
             host="34.34.73.69",
                 user="root",
@@ -110,6 +163,9 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
         print("Removed comment for user", request.user_id, "and song", request.song_id)
         mydb.commit()
         mydb.close()
+        lock.acquire()
+        counter = counter - 1
+        lock.release()
         return RemoveCommentResponse(response=1)
 
 class SongDetails(songDetails_pb2_grpc.SongDetailsServicer):
@@ -120,7 +176,12 @@ class SongDetails(songDetails_pb2_grpc.SongDetailsServicer):
   
         # db_ip = socket.gethostbyname(db_container_name)
 
-
+        global MAX
+        global counter
+        global lock
+        lock.acquire()
+        counter = counter + 1
+        lock.release()
         mydb = mysql.connector.connect(
                 host="34.34.73.69",
                 user="root",
@@ -150,6 +211,9 @@ class SongDetails(songDetails_pb2_grpc.SongDetailsServicer):
         song = SongDetail(song_id=song_id, title=title, artists=artists, url=url, numtimesincharts=numtimesincharts, numcountrydif=numcountrydif, comments=comments)
         mydb.commit()
         mydb.close()
+        lock.acquire()
+        counter = counter - 1
+        lock.release()
         return GetSongDetailsResponse(song=song)
 
 
@@ -166,6 +230,9 @@ def serve():
     )
     songDetails_pb2_grpc.add_SongDetailsServicer_to_server(
         SongDetails(), server 
+    )
+    health_pb2_grpc.add_HealthServicer_to_server(
+        HealthCheck(), server
     )
     server.add_insecure_port("[::]:50051")
     server.start()

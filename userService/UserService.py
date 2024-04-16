@@ -12,17 +12,46 @@ from playlist_pb2 import(
     GetPlayListResponse,
     PlayListResponse
 )
+from health_pb2 import(
+    HealthCheckRequest,
+    HealthCheckResponse
+)
+from threading import Lock
 
 import playlist_pb2_grpc
+import health_pb2_grpc
 import socket
 
+counter = 0
+MAX = 10
+lock = Lock()
+
+class HealthCheck(health_pb2_grpc.HealthServicer):
+
+    def Check(self, request, context):
+        global MAX
+        global counter
+        print("check")
+        if counter < MAX:
+            return HealthCheckResponse(status=1)
+        if counter == MAX:
+            return HealthCheckResponse(status=2)
+
+    def Watch(self, request, context):
+        pass
 
 class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
     def Add(self, request, context):
+        global MAX
+        global counter
+        global lock
         # db_container_name = 'spotifychartsgroup1_db_1'
 
         # db_ip = socket.gethostbyname(db_container_name)
-
+        print("add")
+        lock.acquire()
+        counter = counter + 1
+        lock.release()
         mydb = mysql.connector.connect(
             host="34.34.73.69",
                 user="root",
@@ -42,6 +71,9 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
         print("Inserted comment: ", request.user_id, request.song_id)
         mydb.commit()
         mydb.close()
+        lock.acquire()
+        counter = counter - 1
+        lock.release()
         return PlayListResponse(response=1)
 
     def Remove(self, request, context):
@@ -49,7 +81,13 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
         # db_container_name = 'spotifychartsgroup1_db_1'
        
         # db_ip = socket.gethostbyname(db_container_name)
-
+        global MAX
+        global counter
+        global lock
+        print("remove")
+        lock.acquire()
+        counter = counter + 1
+        lock.release()
         mydb = mysql.connector.connect(
             host="34.34.73.69",
                 user="root",
@@ -66,14 +104,23 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
         print("Removed a song for user", request.user_id, "and song", request.song_id)
         mydb.commit()
         mydb.close()
+        lock.acquire()
+        counter = counter - 1
+        lock.release()
         return PlayListResponse(response=1)
 
     def Get(self, request, context):
+        global MAX
+        global counter
+        global lock
+        print("get")
         #interacte bd
         # db_container_name = 'spotifychartsgroup1_db_1'
 
         # db_ip = socket.gethostbyname(db_container_name)
-
+        lock.acquire()
+        counter = counter + 1
+        lock.release()
         mydb = mysql.connector.connect(
             host="34.34.73.69",
                 user="root",
@@ -93,6 +140,9 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
 
             songs.append(song)
         mydb.close()
+        lock.acquire()
+        counter = counter - 1
+        lock.release()
         return GetPlayListResponse(response = 1,songs=songs) 
         # except:
         #     mydb.close()
@@ -100,12 +150,16 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
            
 
 def serve():
+    print("start serve")
     interceptors = [ExceptionToStatusInterceptor()]
     server = grpc.server(
-        futures.ThreadPoolExecutor(max_workers=10), interceptors=interceptors
+        futures.ThreadPoolExecutor(max_workers=MAX), interceptors=interceptors
     )
     playlist_pb2_grpc.add_PlayListServiceServicer_to_server(
         PlayListService(), server
+    )
+    health_pb2_grpc.add_HealthServicer_to_server(
+        HealthCheck(), server
     )
     """
     with open("server.key", "rb") as fp:
