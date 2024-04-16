@@ -3,3 +3,5 @@ grpcio-tools ~= 1.30
 flask ~= 3.0.2
 pytest ~= 5.4
 mysql-connector-python ~= 8.3.0
+cloud-sql-python-connector[pymysql]
+sqlalchemy
