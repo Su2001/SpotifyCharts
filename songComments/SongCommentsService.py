@@ -1,7 +1,7 @@
 # import pathlib
 import os
 # import connexion
-from flask import Flask, session, abort, redirect, request
+from flask import Flask, session, abort, redirect, request, jsonify
 import grpc
 import pathlib
 import requests
@@ -87,6 +87,10 @@ def index():
 def logout():
     session.clear()
     return redirect("/")
+
+@app.route("/health")
+def healthCheck():
+    return jsonify("ok")
 
 @app.route("/premium")
 @login_is_required

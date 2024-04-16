@@ -1,4 +1,4 @@
-from flask import Flask, session, abort, redirect, request
+from flask import Flask, session, abort, redirect, request, jsonify
 import os
 from playlist_pb2 import ModifyPlayListRequest, GetPlayListRequest
 from playlist_pb2_grpc import PlayListServiceStub
@@ -75,6 +75,10 @@ def index():
 def logout():
     session.clear()
     return redirect("/")
+
+@app.route("/health")
+def healthCheck():
+    return jsonify("ok")
 
 @app.route("/premium/playlist", methods=["GET"])
 @login_is_required
