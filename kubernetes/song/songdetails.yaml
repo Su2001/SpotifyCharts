@@ -17,6 +17,13 @@ spec:
       containers:
       - name: songdetailsservice
         image: su2001/songdetailsservice
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "125m"
+          limits:
+            memory: "64Mi"
+            cpu: "250m"
         ports:
         - containerPort: 5003
         env:

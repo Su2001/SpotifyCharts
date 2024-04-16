@@ -1,23 +1,5 @@
 version: "3.3"
-services:
-
-    db:
-        image: mysql
-        command: --default-authentication-plugin=mysql_native_password
-        restart: always
-        networks:
-            - microservices
-        environment:
-            MYSQL_ROOT_PASSWORD: 1234
-    python_scripts:
-        image: python:3.8
-        networks:
-            - microservices
-        volumes:
-            - ./create_database.py:/initialDatabaseScript/create_database.py
-        command: /bin/sh -c "pip install mysql-connector-python && pip install --upgrade google-api-python-client && pip install pandas && pip install google-cloud-storage && python /initialDatabaseScript/create_database.py"
-        depends_on:
-            - db
+services:            
     playlist:
         environment:
             USERSERVICE_HOST: userservice
