@@ -8,6 +8,9 @@ import search_pb2_grpc
 import songComments_pb2_grpc
 import songDetails_pb2_grpc
 import socket
+import pymysql
+import sqlalchemy
+from google.cloud.sql.connector import Connector
 
 from songComments_pb2 import (
     AddCommentResponse,
@@ -50,37 +53,47 @@ class HealthCheck(health_pb2_grpc.HealthServicer):
 
 class Search(search_pb2_grpc.SearchServicer):
     def GetSearch(self, request, context):
-        # db_container_name = 'spotifychartsgroup1_db_1'
         
-        # db_ip = socket.gethostbyname(db_container_name)
+        def init_connection_pool(connector: Connector) -> sqlalchemy.engine.Engine:
+            def getconn() -> pymysql.connections.Connection:
+                conn = connector.connect(
+                    "spotifychartsgroup01:europe-west4:spotifychartsgroup01database",
+                    "pymysql",
+                    user="root",
+                    password="1234",
+                    db="nonduplicatesongsdatabase"
+                )
+                return conn
+            pool = sqlalchemy.create_engine(
+                "mysql+pymysql://",
+                creator=getconn,
+            )
+            return pool
+
         global MAX
         global counter
         global lock
         lock.acquire()
         counter = counter + 1
         lock.release()
-        mydb = mysql.connector.connect(
-            host="34.34.73.69",
-                user="root",
-                password='1234'
-        )
-        mycursor = mydb.cursor()
-        mydb.database = "nonduplicatesongsdatabase"
+        
 
-        query = "SELECT song_id, title, artist FROM nonduplicatesongsdatabase.Songs WHERE title LIKE %s"
-        search_term = '%' + request.songname + '%'  # Assuming user_input_title is the substring provided by the user
-        mycursor.execute(query, (search_term,))
-        result = mycursor.fetchall()
-        songs = []
-        for row in result:
-            song = search_pb2.Song(
-                id=row[0],
-                title=row[1],
-                artists=row[2]
-            )
-            songs.append(song)
-            # print("Fetched song:", song)
-        mydb.close()
+        with Connector() as connector:
+            pool = init_connection_pool(connector)
+            with pool.connect() as db_conn:
+                query = sqlalchemy.text("SELECT song_id, title, artist FROM Songs WHERE title LIKE :input LIMIT 100")
+                search_term = '%' + request.songname + '%'
+
+                # Execute the query with the search_term parameter
+                result = db_conn.execute(query, {"input": search_term}).fetchall()
+                songs = []
+                for row in result:
+                    song = search_pb2.Song(
+                        id=row[0],
+                        title=row[1],
+                        artists=row[2]
+                    )
+                    songs.append(song)
         lock.acquire()
         counter = counter - 1
         lock.release()
@@ -88,81 +101,122 @@ class Search(search_pb2_grpc.SearchServicer):
 
 class CommentService(songComments_pb2_grpc.CommentServiceServicer):
     def Add(self, request, context):
-        # db_container_name = 'spotifychartsgroup1_db_1'
-        
-        # db_ip = socket.gethostbyname(db_container_name)
+        def init_connection_pool(connector: Connector) -> sqlalchemy.engine.Engine:
+            def getconn() -> pymysql.connections.Connection:
+                conn = connector.connect(
+                    "spotifychartsgroup01:europe-west4:spotifychartsgroup01database",
+                    "pymysql",
+                    user="root",
+                    password="1234",
+                    db="nonduplicatesongsdatabase"
+                )
+                return conn
+            pool = sqlalchemy.create_engine(
+                "mysql+pymysql://",
+                creator=getconn,
+            )
+            return pool
+
+
         global MAX
         global counter
         global lock
         lock.acquire()
         counter = counter + 1
         lock.release()
-        mydb = mysql.connector.connect(
-            host="34.34.73.69",
-                user="root",
-                password='1234'
-        )
-        mycursor = mydb.cursor()
-        mydb.database = "nonduplicatesongsdatabase"
-        query = "INSERT INTO nonduplicatesongsdatabase.Comments (user_id, song_id, comment) VALUES (%s, %s, %s)"
-        mycursor.execute(query, (request.user_id, request.song_id, request.comment,))
-        print("Inserted comment: ", request.user_id, request.song_id, request.comment)
-        mydb.commit()
-        mydb.close()
+        
+        with Connector() as connector:
+            pool = init_connection_pool(connector)
+            with pool.connect() as db_conn:
+                query = sqlalchemy.text("INSERT INTO Comments (user_id, song_id, comment) VALUES (:user_id, :song_id, :comment)")
+
+                db_conn.execute(query, {"user_id": request.user_id,"song_id": request.song_id,"comment": request.comment})
+                db_conn.commit()
+            
+                print("Inserted comment: ", request.user_id, request.song_id, request.comment)
+
+
         lock.acquire()
         counter = counter - 1
         lock.release()
         return AddCommentResponse(response=1)
 
     def Update(self, request, context):
-        # db_container_name = 'spotifychartsgroup1_db_1'
-       
-        # db_ip = socket.gethostbyname(db_container_name)
+        def init_connection_pool(connector: Connector) -> sqlalchemy.engine.Engine:
+            def getconn() -> pymysql.connections.Connection:
+                conn = connector.connect(
+                    "spotifychartsgroup01:europe-west4:spotifychartsgroup01database",
+                    "pymysql",
+                    user="root",
+                    password="1234",
+                    db="nonduplicatesongsdatabase"
+                )
+                return conn
+            pool = sqlalchemy.create_engine(
+                "mysql+pymysql://",
+                creator=getconn,
+            )
+            return pool
+
+
         global MAX
         global counter
         global lock
         lock.acquire()
         counter = counter + 1
         lock.release()
-        mydb = mysql.connector.connect(
-            host="34.34.73.69",
-                user="root",
-                password='1234'
-        )
-        mycursor = mydb.cursor()
-        mydb.database = "nonduplicatesongsdatabase"
-        query = "UPDATE nonduplicatesongsdatabase.Comments SET comment = %s WHERE user_id = %s AND song_id = %s AND comment_id =%s"
-        mycursor.execute(query, (request.comment, request.user_id, request.song_id,request.comment_id))
-        print("Updated comment. The new comment is: ", request.comment)
-        mydb.commit()
-        mydb.close()
+        
+        with Connector() as connector:
+            pool = init_connection_pool(connector)
+            with pool.connect() as db_conn:
+                query = sqlalchemy.text("UPDATE Comments SET comment = :comment WHERE user_id = :user_id AND song_id = :song_id AND comment_id = :comment_id")
+                
+                # Execute the query with the search_term parameter
+                db_conn.execute(query, {"comment": request.comment,"user_id": request.user_id,"song_id": request.song_id, "comment_id": request.comment_id})
+                db_conn.commit()
+                print("Updated comment. The new comment is: ", request.comment)
+
+
         lock.acquire()
         counter = counter - 1
         lock.release()
         return UpdateCommentResponse(response=1)
 
     def Remove(self, request, context):
-        # db_container_name = 'spotifychartsgroup1_db_1'
-       
-        # db_ip = socket.gethostbyname(db_container_name)
+        def init_connection_pool(connector: Connector) -> sqlalchemy.engine.Engine:
+            def getconn() -> pymysql.connections.Connection:
+                conn = connector.connect(
+                    "spotifychartsgroup01:europe-west4:spotifychartsgroup01database",
+                    "pymysql",
+                    user="root",
+                    password="1234",
+                    db="nonduplicatesongsdatabase"
+                )
+                return conn
+            pool = sqlalchemy.create_engine(
+                "mysql+pymysql://",
+                creator=getconn,
+            )
+            return pool
+
         global MAX
         global counter
         global lock
         lock.acquire()
         counter = counter + 1
         lock.release()
-        mydb = mysql.connector.connect(
-            host="34.34.73.69",
-                user="root",
-                password='1234'
-        )
-        mycursor = mydb.cursor()
-        mydb.database = "nonduplicatesongsdatabase"
-        query = "DELETE FROM nonduplicatesongsdatabase.Comments WHERE user_id = %s AND song_id = %s AND comment_id = %s"
-        mycursor.execute(query, (request.user_id, request.song_id, request.comment_id))
-        print("Removed comment for user", request.user_id, "and song", request.song_id)
-        mydb.commit()
-        mydb.close()
+
+        with Connector() as connector:
+            pool = init_connection_pool(connector)
+            with pool.connect() as db_conn:
+                query = sqlalchemy.text("DELETE FROM Comments WHERE user_id = :user_id AND song_id = :song_id AND comment_id = :comment_id")
+                
+                # Execute the query with the search_term parameter
+                db_conn.execute(query, {"user_id": request.user_id,"song_id": request.song_id, "comment_id": request.comment_id})
+                db_conn.commit()
+                print("Removed comment for user", request.user_id, "and song", request.song_id)
+
+
         lock.acquire()
         counter = counter - 1
         lock.release()
@@ -171,10 +225,21 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
 class SongDetails(songDetails_pb2_grpc.SongDetailsServicer):
 
     def GetSongDetails(self, request, context):
-        
-        # db_container_name = 'spotifychartsgroup1_db_1'
-  
-        # db_ip = socket.gethostbyname(db_container_name)
+        def init_connection_pool(connector: Connector) -> sqlalchemy.engine.Engine:
+            def getconn() -> pymysql.connections.Connection:
+                conn = connector.connect(
+                    "spotifychartsgroup01:europe-west4:spotifychartsgroup01database",
+                    "pymysql",
+                    user="root",
+                    password="1234",
+                    db="nonduplicatesongsdatabase"
+                )
+                return conn
+            pool = sqlalchemy.create_engine(
+                "mysql+pymysql://",
+                creator=getconn,
+            )
+            return pool
 
         global MAX
         global counter
@@ -182,35 +247,31 @@ class SongDetails(songDetails_pb2_grpc.SongDetailsServicer):
         lock.acquire()
         counter = counter + 1
         lock.release()
-        mydb = mysql.connector.connect(
-                host="34.34.73.69",
-                user="root",
-                password='1234'
-        )
-        mycursor = mydb.cursor()
-        mydb.database = "nonduplicatesongsdatabase"
-        song_id = request.id
-        song_query = "SELECT * FROM Songs WHERE song_id = %s"
-        mycursor.execute(song_query, (song_id,))
-        song_result = mycursor.fetchone()
 
-        if song_result is None:
-            return GetSongDetailsResponse()
 
-        song_id, title, artists, url, numtimesincharts, numcountrydif = song_result
+        with Connector() as connector:
+            pool = init_connection_pool(connector)
+            with pool.connect() as db_conn:
+                query = sqlalchemy.text("SELECT * FROM Songs WHERE song_id = :song_id")
 
-        comment_query = "SELECT * FROM Comments WHERE song_id = %s"
-        mycursor.execute(comment_query, (song_id,))
-        comment_results = mycursor.fetchall()
+                song_result = db_conn.execute(query, {"song_id": request.id}).fetchone()
 
-        comments = []
-        for comment_result in comment_results:
-            comment_id, user_id, song_id, comment_text = comment_result
-            comments.append(Comment(comment_id=comment_id, user_id=user_id, song_id=song_id, comment=comment_text))
+                if song_result is None:
+                    return GetSongDetailsResponse()
 
-        song = SongDetail(song_id=song_id, title=title, artists=artists, url=url, numtimesincharts=numtimesincharts, numcountrydif=numcountrydif, comments=comments)
-        mydb.commit()
-        mydb.close()
+                song_id, title, artists, url, numtimesincharts, numcountrydif = song_result
+
+                query = sqlalchemy.text("SELECT * FROM Comments WHERE song_id = :song_id2")
+                
+                comment_results = db_conn.execute(query, {"song_id2": request.id}).fetchall()
+
+                comments = []
+                for comment_result in comment_results:
+                    comment_id, user_id, song_id, comment_text = comment_result
+                    comments.append(Comment(comment_id=comment_id, user_id=user_id, song_id=song_id, comment=comment_text))
+
+                song = SongDetail(song_id=song_id, title=title, artists=artists, url=url, numtimesincharts=numtimesincharts, numcountrydif=numcountrydif, comments=comments)
+
         lock.acquire()
         counter = counter - 1
         lock.release()

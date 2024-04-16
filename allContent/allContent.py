@@ -68,7 +68,7 @@ class TopCharts(topCharts_pb2_grpc.TopChartsServicer):
         with Connector() as connector:
             pool = init_connection_pool(connector)
             with pool.connect() as db_conn:
-                result = db_conn.execute(sqlalchemy.text("SELECT * from Songs LIMIT 10")).fetchall()
+                result = db_conn.execute(sqlalchemy.text("SELECT song_id, title, `rank`, artist, chart from Songs LIMIT 10")).fetchall()
                 songs = []
                 for row in result:
                     print(row)

@@ -27,7 +27,6 @@ def song_to_dict(song):
 
 @app.route("/")
 def render_homepage():
-    PYTHON_REQUESTS_COUNTER.inc()
     return "Song Details"
 
 @app.route("/regular/song-details/<int:song_id>", methods=["GET"])
