@@ -3,7 +3,10 @@ import os
 import songDetails_pb2
 import songDetails_pb2_grpc
 import grpc
-
+import random
+import time
+from flask import Flask
+from prometheus_metrics import *
 
 app = Flask(__name__)
 
@@ -24,11 +27,14 @@ def song_to_dict(song):
 
 
 @app.route("/")
+@PYTHON_LATENCIES_HISTOGRAM
 def render_homepage():
+    PYTHON_REQUESTS_COUNTER.inc()
     return "Song Details"
 
 @app.route("/regular/song-details/<int:song_id>", methods=["GET"])
 def song_details(song_id):
+    PYTHON_REQUESTS_COUNTER.inc()
     request = songDetails_pb2.GetSongDetailsRequest(id=song_id)
     response = songDetails_client.GetSongDetails(request)
     song = song_to_dict(response.song)

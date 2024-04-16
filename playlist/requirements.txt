@@ -24,3 +24,5 @@ requests-oauthlib
 rsa
 urllib3
 Werkzeug
+prometheus-client
+prometheus-flask-exporter
