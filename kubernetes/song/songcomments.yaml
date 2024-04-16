@@ -48,7 +48,7 @@ metadata:
   labels:
     app: songcomments
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: songcomments
   ports:
