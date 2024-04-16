@@ -4,7 +4,9 @@ import random
 import grpc
 from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
-import mysql.connector
+from google.cloud.sql.connector import Connector
+import pymysql
+import sqlalchemy
 
 from playlist_pb2 import(
     ModifyPlayListRequest,
@@ -42,111 +44,115 @@ class HealthCheck(health_pb2_grpc.HealthServicer):
 
 class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
     def Add(self, request, context):
+        
+        def init_connection_pool(connector: Connector) -> sqlalchemy.engine.Engine:
+            def getconn() -> pymysql.connections.Connection:
+                conn = connector.connect(
+                    "spotifychartsgroup01:europe-west4:spotifychartsgroup01database",
+                    "pymysql",
+                    user="root",
+                    password="1234",
+                    db="usersdatabase"
+                )
+                return conn
+            pool = sqlalchemy.create_engine(
+                "mysql+pymysql://",
+                creator=getconn,
+            )
+            return pool
         global MAX
         global counter
         global lock
-        # db_container_name = 'spotifychartsgroup1_db_1'
-
-        # db_ip = socket.gethostbyname(db_container_name)
-        print("add")
         lock.acquire()
         counter = counter + 1
         lock.release()
-        mydb = mysql.connector.connect(
-            host="34.34.73.69",
-                user="root",
-                password='1234'
-        )
-        mycursor = mydb.cursor()
-        mydb.database = "usersdatabase"
-        
-        #interacte bd
-        try:
-            query = "INSERT INTO usersdatabase.playlists (user_id, song_id) VALUES (%s, %s)"
-            mycursor.execute(query, (request.user_id, request.song_id,))
-        except:
-            mydb.close()
-            return PlayListResponse(response=-1)
-        
-        print("Inserted comment: ", request.user_id, request.song_id)
-        mydb.commit()
-        mydb.close()
+
+        with Connector() as connector:
+            pool = init_connection_pool(connector)
+            with pool.connect() as db_conn:
+                query = sqlalchemy.text(
+                "INSERT INTO playlists (user_id, song_id) VALUES (:user_id, :song_id)")
+                db_conn.execute(query,{"user_id": request.user_id, "song_id": request.song_id})
+                db_conn.commit()
+                db_conn.close()
         lock.acquire()
         counter = counter - 1
         lock.release()
         return PlayListResponse(response=1)
 
     def Remove(self, request, context):
-        #interacte bd
-        # db_container_name = 'spotifychartsgroup1_db_1'
-       
-        # db_ip = socket.gethostbyname(db_container_name)
+        def init_connection_pool(connector: Connector) -> sqlalchemy.engine.Engine:
+            def getconn() -> pymysql.connections.Connection:
+                conn = connector.connect(
+                    "spotifychartsgroup01:europe-west4:spotifychartsgroup01database",
+                    "pymysql",
+                    user="root",
+                    password="1234",
+                    db="usersdatabase"
+                )
+                return conn
+            pool = sqlalchemy.create_engine(
+                "mysql+pymysql://",
+                creator=getconn,
+            )
+            return pool
         global MAX
         global counter
         global lock
-        print("remove")
         lock.acquire()
         counter = counter + 1
         lock.release()
-        mydb = mysql.connector.connect(
-            host="34.34.73.69",
-                user="root",
-                password='1234'
-        )
-        mycursor = mydb.cursor()
-        mydb.database = "usersdatabase"
-        try:
-            query = "DELETE FROM usersdatabase.playlists WHERE user_id = %s AND song_id = %s"
-            mycursor.execute(query, (request.user_id, request.song_id,))
-        except:
-            mydb.close()
-            return PlayListResponse(response=-1)
-        print("Removed a song for user", request.user_id, "and song", request.song_id)
-        mydb.commit()
-        mydb.close()
+        with Connector() as connector:
+            pool = init_connection_pool(connector)
+            with pool.connect() as db_conn:
+                query = sqlalchemy.text(
+                "DELETE FROM playlists WHERE user_id = :user_id AND song_id = :song_id")
+                db_conn.execute(query,{"user_id": request.user_id, "song_id": request.song_id})
+                db_conn.commit()
+                db_conn.close()
         lock.acquire()
         counter = counter - 1
         lock.release()
         return PlayListResponse(response=1)
 
     def Get(self, request, context):
+        def init_connection_pool(connector: Connector) -> sqlalchemy.engine.Engine:
+            def getconn() -> pymysql.connections.Connection:
+                conn = connector.connect(
+                    "spotifychartsgroup01:europe-west4:spotifychartsgroup01database",
+                    "pymysql",
+                    user="root",
+                    password="1234",
+                    db="usersdatabase"
+                )
+                return conn
+            pool = sqlalchemy.create_engine(
+                "mysql+pymysql://",
+                creator=getconn,
+            )
+            return pool
         global MAX
         global counter
         global lock
         print("get")
-        #interacte bd
-        # db_container_name = 'spotifychartsgroup1_db_1'
-
-        # db_ip = socket.gethostbyname(db_container_name)
         lock.acquire()
         counter = counter + 1
         lock.release()
-        mydb = mysql.connector.connect(
-            host="34.34.73.69",
-                user="root",
-                password='1234'
-        )
-        mycursor = mydb.cursor()
-        mydb.database = "usersdatabase"
-        
-        # try:
-        query = "SELECT song_id FROM usersdatabase.playlists WHERE user_id = %s"
-        mycursor.execute(query, (request.user_id,))
-
-        result = mycursor.fetchall()
-        songs = []
-        for row in result:
-            song = id=row[0]
-
-            songs.append(song)
-        mydb.close()
+        with Connector() as connector:
+            pool = init_connection_pool(connector)
+            with pool.connect() as db_conn:
+                query = sqlalchemy.text(
+                "SELECT song_id FROM playlists WHERE user_id = :user_id")
+                result = db_conn.execute(query,{"user_id": request.user_id}).fetchall()
+                songs = []
+                for row in result:
+                    song = id=row[0]
+                    songs.append(song)
+                db_conn.close()
         lock.acquire()
         counter = counter - 1
         lock.release()
-        return GetPlayListResponse(response = 1,songs=songs) 
-        # except:
-        #     mydb.close()
-        #     return GetPlayListResponse(response = -1,songs=[]) 
+        return GetPlayListResponse(response = 1,songs=songs)
            
 
 def serve():

@@ -68,23 +68,27 @@ class TopCharts(topCharts_pb2_grpc.TopChartsServicer):
         with Connector() as connector:
             pool = init_connection_pool(connector)
             with pool.connect() as db_conn:
-                result = db_conn.execute(sqlalchemy.text("SELECT song_id, title, `rank`, artist, chart from Songs LIMIT 10")).fetchall()
+                query = sqlalchemy.text(
+                "SELECT song_id, title, `rank`, artist, chart "
+                "FROM Songs "
+                "WHERE date = :date AND region = :country"
+                )
+                result = db_conn.execute(query,{"date": request.date, "country": request.country}).fetchall()
                 songs = []
                 for row in result:
-                    print(row)
                     song = topCharts_pb2.Song(
                         id=row[0],
                         title=row[1],
                         rank=row[2],
-                        artists=row[3],
+                        artists=row[4],
                         chart=row[4]
                     )
-                    print(song)
                     songs.append(song)
-            lock.acquire()
-            counter = counter - 1
-            lock.release()
-            return topCharts_pb2.GetTopChartsResponse(songs=songs)
+                db_conn.close()
+        lock.acquire()
+        counter = counter - 1
+        lock.release()
+        return topCharts_pb2.GetTopChartsResponse(songs=songs)
 
 
 def serve():
