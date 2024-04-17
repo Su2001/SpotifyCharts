@@ -1,7 +1,9 @@
 <h1>SpotifyChartsGroup1</h1>
 
 How to run the project:
-```./build.sh```
+```./build.sh```<br>
+After building the project execute:
+```kubectl port-forward --namespace=ingress-nginx service/ingress-nginx-controller 8080:80 ```
 
 How to test the different use cases: 
 Run ```./tests.sh```
