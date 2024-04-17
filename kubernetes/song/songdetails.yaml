@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: songdetails-d
+  name: songdetails
   labels:
     app: songdetails
 spec:
@@ -28,7 +28,7 @@ spec:
         - containerPort: 5003
         env:
         - name: SONGDETAILS_HOST
-          value: "songservice-service"
+          value: "songdetails-service"
         livenessProbe:
           httpGet:
             path: /
@@ -57,3 +57,16 @@ spec:
       port: 80
       #nodePort: 30004
       targetPort: 5003
+---
+apiVersion: autoscaling/v1 
+kind: HorizontalPodAutoscaler 
+metadata:
+  name: songdetails-scalability-control
+spec:
+  scaleTargetRef: 
+    apiVersion: apps/v1 
+    kind: Deployment 
+    name: songdetails
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 50

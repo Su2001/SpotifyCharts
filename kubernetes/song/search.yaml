@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: searchservice-d
+  name: searchservice
   labels:
     app: searchservice
 spec:
@@ -57,5 +57,18 @@ spec:
       port: 80
       #nodePort: 30002
       targetPort: 5002
+---
+apiVersion: autoscaling/v1 
+kind: HorizontalPodAutoscaler 
+metadata:
+  name: searchservice-scalability-control
+spec:
+  scaleTargetRef: 
+    apiVersion: apps/v1 
+    kind: Deployment 
+    name: searchservice
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 50
 
 

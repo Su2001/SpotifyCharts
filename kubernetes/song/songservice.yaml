@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: songservice-d
+  name: songservice
   labels:
     app: songservice
 spec:
@@ -46,4 +46,17 @@ spec:
     - name: grpc
       port: 50051
       targetPort: 50051
+---
+apiVersion: autoscaling/v1 
+kind: HorizontalPodAutoscaler 
+metadata:
+  name: songservice-scalability-control
+spec:
+  scaleTargetRef: 
+    apiVersion: apps/v1 
+    kind: Deployment 
+    name: songservice
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 50
 

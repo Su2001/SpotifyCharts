@@ -1,5 +1,6 @@
 minikube start
-
+minikube addons enable metrics-server
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.6.4/deploy/static/provider/cloud/deploy.yaml
 kubectl apply -f kubernetes/playlist/playlist.yaml
 kubectl apply -f kubernetes/playlist/userservice.yaml
 
@@ -10,12 +11,11 @@ kubectl apply -f kubernetes/song/songservice.yaml
 
 kubectl apply -f kubernetes/topchart/allcontentservice.yaml
 kubectl apply -f kubernetes/topchart/topchart.yaml
-
-kubectl apply -f kubernetes/db.yaml
-kubectl apply -f kubernetes/hpa.yaml
 kubectl apply -f kubernetes/ingress.yaml
-kubectl apply -f kubernetes/podmonitoring.yaml
-kubectl apply -f kubernetes/service.yaml
+#kubectl apply -f kubernetes/hpa.yaml
+
+
+
 
 # DOCKER_BUILDKIT=1 docker build . -f playlist/Dockerfile -t playlist 
 # DOCKER_BUILDKIT=1 docker build . -f userService/Dockerfile -t userservice 
