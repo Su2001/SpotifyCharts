@@ -7,6 +7,7 @@ kubectl delete -f kubernetes/song/songservice.yaml
 kubectl delete -f kubernetes/topchart/allcontentservice.yaml
 kubectl delete -f kubernetes/topchart/topchart.yaml
 kubectl delete -f kubernetes/ingress.yaml
+kubectl delete -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.6.4/deploy/static/provider/cloud/deploy.yaml
 
 
 
