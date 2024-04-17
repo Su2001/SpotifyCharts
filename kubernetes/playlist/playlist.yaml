@@ -53,7 +53,7 @@ metadata:
   labels:
     app: playlist
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: playlist
   ports:

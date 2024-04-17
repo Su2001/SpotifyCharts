@@ -53,7 +53,7 @@ metadata:
   labels:
     app: searchservice
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: searchservice
   ports:

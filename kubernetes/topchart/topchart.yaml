@@ -53,7 +53,7 @@ metadata:
   labels:
     app: topcharts
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: topcharts
   ports:
