@@ -5,6 +5,11 @@ metadata:
   labels:
     app: playlist
 spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 20%
+      maxUnavailable: 20%
+    type: RollingUpdate
   replicas: 1
   selector:
     matchLabels:

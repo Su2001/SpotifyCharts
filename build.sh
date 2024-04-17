@@ -1,5 +1,5 @@
-#minikube start
-#minikube addons enable metrics-server
+minikube start
+minikube addons enable metrics-server
 kubectl apply -f kubernetes/playlist/playlist.yaml
 kubectl apply -f kubernetes/playlist/userservice.yaml
 
