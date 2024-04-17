@@ -24,8 +24,6 @@ from songDetails_pb2 import (
     Comment
 )
 
-import mysql.connector
-
 from health_pb2 import(
     HealthCheckRequest,
     HealthCheckResponse

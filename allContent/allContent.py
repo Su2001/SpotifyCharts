@@ -6,7 +6,6 @@ import grpc
 from grpc_interceptor import ExceptionToStatusInterceptor
 import topCharts_pb2
 import topCharts_pb2_grpc
-import mysql.connector
 import socket
 from google.cloud.sql.connector import Connector
 import pymysql
