@@ -3,3 +3,4 @@ grpcio-tools ~= 1.30
 pytest ~= 5.4
 cloud-sql-python-connector[pymysql]
 sqlalchemy
+google-auth==2.29.0

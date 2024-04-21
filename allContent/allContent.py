@@ -17,6 +17,13 @@ from health_pb2 import(
 )
 import health_pb2_grpc
 from threading import Lock
+from google.oauth2 import service_account
+import json
+
+f = open("spotifychartsgroup01-4bed062a017f.json")
+json_file = json.load(f)
+credentials = service_account.Credentials.from_service_account_info(json_file)
+f.close()
 
 counter = 0
 MAX = 10
@@ -60,11 +67,12 @@ class TopCharts(topCharts_pb2_grpc.TopChartsServicer):
         global MAX
         global counter
         global lock
+        global credentials
         lock.acquire()
         counter = counter + 1
         lock.release()
 
-        with Connector() as connector:
+        with Connector(credentials=credentials) as connector:
             pool = init_connection_pool(connector)
             with pool.connect() as db_conn:
                 query = sqlalchemy.text(

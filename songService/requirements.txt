@@ -4,3 +4,4 @@ flask ~= 3.0.2
 pytest ~= 5.4
 sqlalchemy
 cloud-sql-python-connector[pymysql]
+google-auth==2.29.0
