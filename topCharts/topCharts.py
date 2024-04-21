@@ -19,6 +19,10 @@ def song_to_dict(song):
         "chart": song.chart
     }
 
+@app.route("/")
+def deafaut():
+    return jsonify("TopChart")
+
 @app.route("/health")
 def healthCheck():
     return jsonify("ok")
