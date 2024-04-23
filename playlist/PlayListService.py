@@ -39,13 +39,13 @@ def login_is_required(function):
 
     return wrapper
 
-@app.route("/login")
+@app.route("/premium/playlist/auxlogin")
 def login():
     authorization_url, state = flow.authorization_url()
     session["state"] = state
     return redirect(authorization_url)
 
-@app.route("/callback")
+@app.route("/premium/playlist/callback")
 def callback():
     flow.fetch_token(authorization_response=request.url)
 
@@ -67,14 +67,18 @@ def callback():
     session["name"] = id_info.get("name")
     return redirect("/premium/playlist")
 
-@app.route("/")
+@app.route("/premium/playlist/login")
 def index():
-    return "<a href='/login'><button>Login</button></a>"
+    return "<a href='/premium/playlist/auxlogin'><button>Login</button></a>"
 
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect("/")
+
+@app.route("/")
+def non():
+    return jsonify("ok")
 
 @app.route("/health")
 def healthCheck():

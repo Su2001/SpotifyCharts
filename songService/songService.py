@@ -100,6 +100,7 @@ class Search(search_pb2_grpc.SearchServicer):
                         artists=row[2]
                     )
                     songs.append(song)
+                db_conn.close()
         lock.acquire()
         counter = counter - 1
         lock.release()
@@ -139,7 +140,7 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
 
                 db_conn.execute(query, {"user_id": request.user_id,"song_id": request.song_id,"comment": request.comment})
                 db_conn.commit()
-            
+                db_conn.close()
                 print("Inserted comment: ", request.user_id, request.song_id, request.comment)
 
 
@@ -182,6 +183,7 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
                 # Execute the query with the search_term parameter
                 db_conn.execute(query, {"comment": request.comment,"user_id": request.user_id,"song_id": request.song_id, "comment_id": request.comment_id})
                 db_conn.commit()
+                db_conn.close()
                 print("Updated comment. The new comment is: ", request.comment)
 
 
@@ -223,6 +225,7 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
                 # Execute the query with the search_term parameter
                 db_conn.execute(query, {"user_id": request.user_id,"song_id": request.song_id, "comment_id": request.comment_id})
                 db_conn.commit()
+                db_conn.close()
                 print("Removed comment for user", request.user_id, "and song", request.song_id)
 
 
@@ -279,6 +282,7 @@ class SongDetails(songDetails_pb2_grpc.SongDetailsServicer):
                 for comment_result in comment_results:
                     comment_id, user_id, song_id, comment_text = comment_result
                     comments.append(Comment(comment_id=comment_id, user_id=user_id, song_id=song_id, comment=comment_text))
+                db_conn.close()
 
                 song = SongDetail(song_id=song_id, title=title, artists=artists, url=url, numtimesincharts=numtimesincharts, numcountrydif=numcountrydif, comments=comments)
 

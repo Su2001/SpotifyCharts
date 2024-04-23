@@ -33,7 +33,7 @@ spec:
         - containerPort: 5003
         env:
         - name: SONGDETAILS_HOST
-          value: "songdetails-service"
+          value: "songservice-service"
         livenessProbe:
           httpGet:
             path: /
