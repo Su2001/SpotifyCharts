@@ -33,7 +33,7 @@ Run ```./tests.sh```
     <br>to check if the DELETE was successful you can check the song details of that certain song
 
 <b>comments(PUT)</b>, it is possible to execute a PUT through the following code, inserting it in the console:
-      ```curl -i -X PUT -H 'Content-Type: application/json'  'http://127.0.0.1:8080/premium/song-details/2/comment/3?user_id=3&comment=TESTESTES'```
+      ```curl -i -X PUT -H 'Content-Type: application/json' -d '{}' 'http://127.0.0.1:8080/premium/song-details/2/comment/3?user_id=3&comment=TESTESTES'```
     <br>to check if the PUT was successful you can check the song details of that certain song
     
 <b>playlist(POST)</b>, it is possible to execute a POST through the following code, inserting it in the console:
