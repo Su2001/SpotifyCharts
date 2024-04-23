@@ -1,6 +1,7 @@
 <h1>SpotifyChartsGroup1</h1>
 
-How to run the project:
+How to run the project: <br><br>
+Initialize the cluster: ```gcloud container clusters create-auto spo-cluster --region=europe-west4```
 ```./build.sh```<br>
 After building the project execute:
 ```kubectl port-forward --namespace=ingress-nginx service/ingress-nginx-controller 8080:80 ```
