@@ -13,4 +13,4 @@ RUN python -m grpc_tools.protoc -I ../protobufs --python_out=. \
            --grpc_python_out=. ../protobufs/health.proto
 
 EXPOSE 50051
-ENTRYPOINT [ "python", "UserService.py" ]
+ENTRYPOINT [ "python","-u", "UserService.py" ]

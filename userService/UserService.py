@@ -24,12 +24,12 @@ import playlist_pb2_grpc
 import health_pb2_grpc
 import socket
 from google.oauth2 import service_account
-import json
+import json, os
 
 counter = 0
 MAX = 10
 lock = Lock()
-f = open("spotifychartsgroup01-4bed062a017f.json")
+f = open(os.getenv("AUTH_JSON")+".json")
 json_file = json.load(f)
 credentials = service_account.Credentials.from_service_account_info(json_file)
 f.close()

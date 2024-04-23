@@ -18,9 +18,9 @@ from health_pb2 import(
 import health_pb2_grpc
 from threading import Lock
 from google.oauth2 import service_account
-import json
+import json, os
 
-f = open("spotifychartsgroup01-4bed062a017f.json")
+f = open(os.getenv("AUTH_JSON")+".json")
 json_file = json.load(f)
 credentials = service_account.Credentials.from_service_account_info(json_file)
 f.close()

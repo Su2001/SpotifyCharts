@@ -1,5 +1,6 @@
 #minikube start
 #minikube addons enable metrics-server
+kubectl create -f kubernetes/secret.yaml
 kubectl apply -f kubernetes/playlist/playlist.yaml
 kubectl apply -f kubernetes/playlist/userservice.yaml
 
@@ -12,8 +13,6 @@ kubectl apply -f kubernetes/topchart/allcontentservice.yaml
 kubectl apply -f kubernetes/topchart/topchart.yaml
 kubectl apply -f kubernetes/ingress.yaml
 #kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.6.4/deploy/static/provider/cloud/deploy.yaml
-#kubectl apply -f kubernetes/hpa.yaml
-
 
 
 

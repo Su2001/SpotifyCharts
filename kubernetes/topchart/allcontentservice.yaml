@@ -35,6 +35,12 @@ spec:
           grpc:
             port: 50051
           initialDelaySeconds: 30
+        env:
+          - name: AUTH_JSON
+            valueFrom:
+              secretKeyRef:
+                name: my-secret
+                key: auth
 ---
 apiVersion: v1
 kind: Service
