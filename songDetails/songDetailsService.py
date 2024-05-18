@@ -36,5 +36,10 @@ def song_details(song_id):
     song = song_to_dict(response.song)
     return jsonify(song)
 
+@app.errorhandler(500)
+def internal_error(error):
+    response = jsonify({"error": "Internal error"})
+    response.status_code = 500
+    return response
 # if __name__ == "__main__":
 #     app.run(debug=True)
