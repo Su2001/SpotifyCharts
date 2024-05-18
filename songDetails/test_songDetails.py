@@ -86,4 +86,4 @@ def test_song_details_internal_error(mock_get_song_details, client):
     # Test the endpoint
     response = client.get('/regular/song-details/1')
     assert response.status_code == 500
-    assert response.json == {"error": "Internal er"}
+    assert response.json == {"error": "Internal error"}
