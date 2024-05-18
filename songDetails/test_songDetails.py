@@ -1,4 +1,8 @@
 import pytest
+import warnings
+
+# Suppress specific warning types
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 from unittest.mock import patch
 import sys
 import grpc
