@@ -28,6 +28,10 @@ f.close()
 counter = 0
 MAX = 10
 lock = Lock()
+db = os.getenv("DB_NAME")
+user = os.getenv("DB_USER")
+passord = os.getenv("DB_PASS")
+table = os.getenv("DB_TABLE")
 
 class HealthCheck(health_pb2_grpc.HealthServicer):
 
@@ -51,11 +55,11 @@ class TopCharts(topCharts_pb2_grpc.TopChartsServicer):
         def init_connection_pool(connector: Connector) -> sqlalchemy.engine.Engine:
             def getconn() -> pymysql.connections.Connection:
                 conn = connector.connect(
-                    "spotifychartsgroup01:europe-west4:spotifychartsgroup01database",
+                    os.getenv("DB_NAME"),
                     "pymysql",
-                    user="root",
-                    password="1234",
-                    db="allcontentdatabase"
+                    user=os.getenv("DB_USER"),
+                    password=os.getenv("DB_PASS"),
+                    db=os.getenv("DB_TABLE")
                 )
                 return conn
             pool = sqlalchemy.create_engine(

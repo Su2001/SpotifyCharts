@@ -62,11 +62,11 @@ class Search(search_pb2_grpc.SearchServicer):
         def init_connection_pool(connector: Connector) -> sqlalchemy.engine.Engine:
             def getconn() -> pymysql.connections.Connection:
                 conn = connector.connect(
-                    "spotifychartsgroup01:europe-west4:spotifychartsgroup01database",
+                    os.getenv("DB_NAME"),
                     "pymysql",
-                    user="root",
-                    password="1234",
-                    db="nonduplicatesongsdatabase"
+                    user=os.getenv("DB_USER"),
+                    password=os.getenv("DB_PASS"),
+                    db=os.getenv("DB_TABLE")
                 )
                 return conn
             pool = sqlalchemy.create_engine(
@@ -111,11 +111,11 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
         def init_connection_pool(connector: Connector) -> sqlalchemy.engine.Engine:
             def getconn() -> pymysql.connections.Connection:
                 conn = connector.connect(
-                    "spotifychartsgroup01:europe-west4:spotifychartsgroup01database",
+                    os.getenv("DB_NAME"),
                     "pymysql",
-                    user="root",
-                    password="1234",
-                    db="nonduplicatesongsdatabase"
+                    user=os.getenv("DB_USER"),
+                    password=os.getenv("DB_PASS"),
+                    db=os.getenv("DB_TABLE")
                 )
                 return conn
             pool = sqlalchemy.create_engine(
@@ -153,11 +153,11 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
         def init_connection_pool(connector: Connector) -> sqlalchemy.engine.Engine:
             def getconn() -> pymysql.connections.Connection:
                 conn = connector.connect(
-                    "spotifychartsgroup01:europe-west4:spotifychartsgroup01database",
+                    os.getenv("DB_NAME"),
                     "pymysql",
-                    user="root",
-                    password="1234",
-                    db="nonduplicatesongsdatabase"
+                    user=os.getenv("DB_USER"),
+                    password=os.getenv("DB_PASS"),
+                    db=os.getenv("DB_TABLE")
                 )
                 return conn
             pool = sqlalchemy.create_engine(
@@ -196,11 +196,11 @@ class CommentService(songComments_pb2_grpc.CommentServiceServicer):
         def init_connection_pool(connector: Connector) -> sqlalchemy.engine.Engine:
             def getconn() -> pymysql.connections.Connection:
                 conn = connector.connect(
-                    "spotifychartsgroup01:europe-west4:spotifychartsgroup01database",
+                    os.getenv("DB_NAME"),
                     "pymysql",
-                    user="root",
-                    password="1234",
-                    db="nonduplicatesongsdatabase"
+                    user=os.getenv("DB_USER"),
+                    password=os.getenv("DB_PASS"),
+                    db=os.getenv("DB_TABLE")
                 )
                 return conn
             pool = sqlalchemy.create_engine(
@@ -240,11 +240,11 @@ class SongDetails(songDetails_pb2_grpc.SongDetailsServicer):
         def init_connection_pool(connector: Connector) -> sqlalchemy.engine.Engine:
             def getconn() -> pymysql.connections.Connection:
                 conn = connector.connect(
-                    "spotifychartsgroup01:europe-west4:spotifychartsgroup01database",
+                    os.getenv("DB_NAME"),
                     "pymysql",
-                    user="root",
-                    password="1234",
-                    db="nonduplicatesongsdatabase"
+                    user=os.getenv("DB_USER"),
+                    password=os.getenv("DB_PASS"),
+                    db=os.getenv("DB_TABLE")
                 )
                 return conn
             pool = sqlalchemy.create_engine(

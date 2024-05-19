@@ -41,6 +41,26 @@ spec:
               secretKeyRef:
                 name: my-secret
                 key: auth
+          - name: DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: my-secret
+                key: dbpass
+          - name: DB_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: setup-configmap
+                key: dbname
+          - name: DB_USER
+            valueFrom:
+              configMapKeyRef:
+                name: setup-configmap
+                key: dbuser
+          - name: DB_TABLE
+            valueFrom:
+              configMapKeyRef:
+                name: setup-configmap
+                key: nondup
 ---
 apiVersion: v1
 kind: Service

@@ -33,6 +33,7 @@ f = open(os.getenv("AUTH_JSON")+".json")
 json_file = json.load(f)
 credentials = service_account.Credentials.from_service_account_info(json_file)
 f.close()
+
 class HealthCheck(health_pb2_grpc.HealthServicer):
 
     def Check(self, request, context):
@@ -53,11 +54,11 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
         def init_connection_pool(connector: Connector) -> sqlalchemy.engine.Engine:
             def getconn() -> pymysql.connections.Connection:
                 conn = connector.connect(
-                    "spotifychartsgroup01:europe-west4:spotifychartsgroup01database",
+                    os.getenv("DB_NAME"),
                     "pymysql",
-                    user="root",
-                    password="1234",
-                    db="usersdatabase"
+                    user=os.getenv("DB_USER"),
+                    password=os.getenv("DB_PASS"),
+                    db=os.getenv("DB_TABLE")
                 )
                 return conn
             pool = sqlalchemy.create_engine(
@@ -90,11 +91,11 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
         def init_connection_pool(connector: Connector) -> sqlalchemy.engine.Engine:
             def getconn() -> pymysql.connections.Connection:
                 conn = connector.connect(
-                    "spotifychartsgroup01:europe-west4:spotifychartsgroup01database",
+                    os.getenv("DB_NAME"),
                     "pymysql",
-                    user="root",
-                    password="1234",
-                    db="usersdatabase"
+                    user=os.getenv("DB_USER"),
+                    password=os.getenv("DB_PASS"),
+                    db=os.getenv("DB_TABLE")
                 )
                 return conn
             pool = sqlalchemy.create_engine(
@@ -126,11 +127,11 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
         def init_connection_pool(connector: Connector) -> sqlalchemy.engine.Engine:
             def getconn() -> pymysql.connections.Connection:
                 conn = connector.connect(
-                    "spotifychartsgroup01:europe-west4:spotifychartsgroup01database",
+                    os.getenv("DB_NAME"),
                     "pymysql",
-                    user="root",
-                    password="1234",
-                    db="usersdatabase"
+                    user=os.getenv("DB_USER"),
+                    password=os.getenv("DB_PASS"),
+                    db=os.getenv("DB_TABLE")
                 )
                 return conn
             pool = sqlalchemy.create_engine(
