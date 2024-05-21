@@ -3,6 +3,7 @@ grpcio-tools ~= 1.30
 pytest ~= 5.4
 flask ~= 2.2.3
 Jinja2 ~= 3.1.2
+mock
 
 six
 cachetools
