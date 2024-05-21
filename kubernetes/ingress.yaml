@@ -3,8 +3,10 @@ kind: Ingress
 metadata:
   name: spotify-ingress
   annotations:
+
+    kubernetes.io/ingress.global-static-ip-name: "kubernetes-ingress"
     # If the class annotation is not specified it defaults to "gce".
-    kubernetes.io/ingress.class: "gce"
+    
 spec:
   rules:
   - http:

@@ -7,6 +7,7 @@ kubectl delete -f kubernetes/song/songservice.yaml
 kubectl delete -f kubernetes/topchart/allcontentservice.yaml
 kubectl delete -f kubernetes/topchart/topchart.yaml
 kubectl delete -f kubernetes/ingress.yaml
+kubectl delete -f kubernetes/config-map.yaml
 kubectl delete -f kubernetes/secret.yaml
 
 

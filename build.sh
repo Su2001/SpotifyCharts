@@ -1,6 +1,7 @@
 #minikube start
 #minikube addons enable metrics-server
 kubectl create -f kubernetes/secret.yaml
+kubectl create -f kubernetes/config-map.yaml
 kubectl apply -f kubernetes/playlist/playlist.yaml
 kubectl apply -f kubernetes/playlist/userservice.yaml
 
