@@ -65,23 +65,42 @@ echo "Running tests..."
 # Define the directories containing test files
 test_directories=("playlist" "search" "songComments" "songDetails" "topCharts")
 
+# Save the current directory
+initial_dir=$(pwd)
+
 # Iterate over each test directory
 for dir in "${test_directories[@]}"; do
     echo "Running tests in $dir..."
     # Navigate to the test directory
     cd "$dir" || exit 1
+    
+    # Check if requirements.txt exists
+    if [ -f requirements.txt ]; then
+        # Install dependencies
+        pip3 install -r requirements.txt
+    fi
+    
+    # Check if pytest is installed, install it if not
+    if ! command -v pytest &> /dev/null; then
+        pip3 install pytest
+    fi
+    pip3 install --upgrade pytest
     # Run pytest
     pytest
     tests_result=$?
+    
     # If tests fail, prevent the commit
     if [ $tests_result -ne 0 ]; then
         echo "Tests failed in $dir! Commit aborted."
+        cd "$initial_dir" || exit 1
         exit 1
     fi
-    # Return to the original directory
-    cd - || exit 1
+    
+    # Return to the initial directory
+    cd "$initial_dir" || exit 1
 done
 
 # If all tests pass, allow the commit
 exit 0
+
 ```
