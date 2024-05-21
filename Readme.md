@@ -49,3 +49,39 @@ Run ```./tests.sh```
       for example:
       ```https://8080-cs-314474093647-default.cs-europe-west1-xedi.cloudshell.dev/premium/playlist?user_id=1```
     <br>to check you need to access the database and check the table
+
+<b>How to include the git hooks in the project</b>
+      1. When pulling the project access the .git folder
+      2. Inside the .git folder, access the hooks folder
+      3. Change the "pre-commit.sample" to "pre-commit"
+      4. Inside the "pre-commit" file delete the content inside and copy paste this code to the file
+
+```
+#!/bin/sh
+
+# Run tests before committing
+echo "Running tests..."
+
+# Define the directories containing test files
+test_directories=("playlist" "search" "songComments" "songDetails" "topCharts")
+
+# Iterate over each test directory
+for dir in "${test_directories[@]}"; do
+    echo "Running tests in $dir..."
+    # Navigate to the test directory
+    cd "$dir" || exit 1
+    # Run pytest
+    pytest
+    tests_result=$?
+    # If tests fail, prevent the commit
+    if [ $tests_result -ne 0 ]; then
+        echo "Tests failed in $dir! Commit aborted."
+        exit 1
+    fi
+    # Return to the original directory
+    cd - || exit 1
+done
+
+# If all tests pass, allow the commit
+exit 0
+```
