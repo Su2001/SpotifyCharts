@@ -1,0 +1,1 @@
+Todos os serviços existentes no backend da aplicação foram atualizados de modo ao acesso à base de dados ser feito de forma segura, utilizando as credenciais definidas no secret.yaml. 
