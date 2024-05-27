@@ -9,7 +9,12 @@ kubectl delete -f kubernetes/topchart/topchart.yaml
 kubectl delete -f kubernetes/ingress.yaml
 kubectl delete -f kubernetes/config-map.yaml
 kubectl delete -f kubernetes/secret.yaml
-
+kubectl delete -f prometheus/components.yaml
+kubectl create configmap prometheus-cm --from-file prometheus-cm.yaml
+kubectl delete -f prometheus/py-prom-d.yaml
+kubectl delete -f prometheus/py-prom-s.yaml
+kubectl delete -f prometheus/grafana.yaml
+kubectl delete svc,deploy,pod --all
 
 
 

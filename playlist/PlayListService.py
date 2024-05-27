@@ -15,6 +15,12 @@ playList_host = os.getenv("USERSERVICE_HOST", "localhost")
 playList_channel = grpc.insecure_channel(f"{playList_host}:50051")
 playList_client = PlayListServiceStub(playList_channel)
 
+REQUEST_COUNT = Counter('playlist_requests_total', 'Total number of requests')
+FAILURES_COUNT = Counter('playlist_failures_total', 'Total number of requests')
+REQUEST_LATENCY = Histogram('playlist_request_latency_seconds', 'Latency of requests')
+AUTH_REQUEST_COUNT = Counter('playlist_auth_requests_total', 'Total number of authentication requests')
+SUCESSEFULL_AUTH_REQUEST_COUNT = Counter('playlist_sucessfull_auth_requests_total', 'Total number of authentication requests')
+
 app = Flask(__name__)
 app.secret_key = "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" # certifique-se de que isso corresponda ao que está em client_secret.json
 
@@ -41,12 +47,14 @@ def login_is_required(function):
 
 @app.route("/premium/playlist/auxlogin")
 def login():
+    AUTH_REQUEST_COUNT.inc()
     authorization_url, state = flow.authorization_url()
     session["state"] = state
     return redirect(authorization_url)
 
 @app.route("/premium/playlist/callback")
 def callback():
+    
     flow.fetch_token(authorization_response=request.url)
 
     if not session["state"] == request.args["state"]:
@@ -65,6 +73,7 @@ def callback():
 
     session["google_id"] = id_info.get("sub")
     session["name"] = id_info.get("name")
+    SUCESSEFULL_AUTH_REQUEST_COUNT.inc()
     return redirect("/premium/playlist")
 
 @app.route("/premium/playlist/login")
@@ -87,12 +96,17 @@ def healthCheck():
 @app.route("/premium/playlist", methods=["GET"])
 @login_is_required
 def get_PlayList():
+    REQUEST_COUNT.inc()
+    start_time = time.time()
     user_id = request.args.get("user_id")
     #grpc
     requestAux = GetPlayListRequest(user_id=int(user_id))
     response = playList_client.Get(requestAux)
     if response.response == -1:
+        FAILURES_COUNT.inc()
+        REQUEST_LATENCY.observe(time.time() - start_time)
         return ("ERROR, the user is not found") 
+    REQUEST_LATENCY.observe(time.time() - start_time)
     a = list(response.songs)
     return f"Hello {session['name']}! <br/> <a href='/logout'><button>Logout</button></a>" + jsonify(a)
     """
@@ -105,25 +119,32 @@ def get_PlayList():
 @app.route("/premium/playlist/<int:song_id>", methods=["POST"])
 # @login_is_required
 def add_PlayList(song_id):
+    REQUEST_COUNT.inc()
     user_id = str(request.json.get("user_id"))
 
     #grpc
     requestAux = ModifyPlayListRequest(user_id = int(user_id), song_id = song_id)
     response = playList_client.Add(requestAux)
     if response.response == -1:
+        FAILURES_COUNT.inc()
+        REQUEST_LATENCY.observe(time.time() - start_time)
         return("ERROR, Add failed") 
+    REQUEST_LATENCY.observe(time.time() - start_time)
     return jsonify("Add success")
 
 @app.route("/premium/playlist/<int:song_id>", methods=["DELETE"])
 # @login_is_required
 def remove_PlayList(song_id):
+    REQUEST_COUNT.inc()
     user_id = str(request.args.get("user_id"))
-
     #grpc
     requestAux = ModifyPlayListRequest(user_id = int(user_id), song_id = song_id)
     response = playList_client.Remove(requestAux)
     if response.response == -1:
-        return("ERROR, Remove failed") 
+        FAILURES_COUNT.inc()
+        REQUEST_LATENCY.observe(time.time() - start_time)
+        return("ERROR, Remove failed")
+    REQUEST_LATENCY.observe(time.time() - start_time)
     return jsonify("Remove success")
 
 #if __name__ == "__main__":

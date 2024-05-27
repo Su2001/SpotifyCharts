@@ -6,12 +6,18 @@ import grpc
 import random
 import time
 from flask import Flask
+from prometheus_client import Counter, Histogram, generate_latest
 
 app = Flask(__name__)
 
 songDetails_host = os.getenv("SONGDETAILS_HOST", "localhost")
 songDetails_channel = grpc.insecure_channel(f"{songDetails_host}:50051")
 songDetails_client = songDetails_pb2_grpc.SongDetailsStub(songDetails_channel)
+
+
+REQUEST_COUNT = Counter('songdetails_requests_total', 'Total number of requests to /regular/song-details')
+FAILURES_COUNT = Counter('songdetails_failures_total', 'Total number of failures to /regular/song-details')
+REQUEST_LATENCY = Histogram('songdetails_request_latency_seconds', 'Latency of requests to /regular/song-details')
 
 def song_to_dict(song):
     return {
@@ -31,10 +37,23 @@ def render_homepage():
 
 @app.route("/regular/song-details/<int:song_id>", methods=["GET"])
 def song_details(song_id):
-    request = songDetails_pb2.GetSongDetailsRequest(id=song_id)
-    response = songDetails_client.GetSongDetails(request)
-    song = song_to_dict(response.song)
-    return jsonify(song)
+    REQUEST_COUNT.inc()  
+    start_time = time.time() 
+    # request = songDetails_pb2.GetSongDetailsRequest(id=song_id)
+    # response = songDetails_client.GetSongDetails(request)
+    # song = song_to_dict(response.song)
+    # return jsonify(song)
+    try:
+        request = songDetails_pb2.GetSongDetailsRequest(id=song_id)
+        response = songDetails_client.GetSongDetails(request)
+        song = song_to_dict(response.song)
+        return jsonify(song)
+    except Exception as e:
+        FAILURES_COUNT.inc()
+        app.logger.error(f"Error retrieving song details: {e}")
+        return internal_error(e)
+    finally:
+        REQUEST_LATENCY.observe(time.time() - start_time)
 
 @app.errorhandler(500)
 def internal_error(error):

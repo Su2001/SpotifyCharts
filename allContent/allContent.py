@@ -82,7 +82,8 @@ class TopCharts(topCharts_pb2_grpc.TopChartsServicer):
                 query = sqlalchemy.text(
                 "SELECT song_id, title, `rank`, artist, chart "
                 "FROM Songs "
-                "WHERE date = :date AND region = :country"
+                "WHERE date = :date AND region = :country "
+                "LIMIT 50 "
                 )
                 result = db_conn.execute(query,{"date": request.date, "country": request.country}).fetchall()
                 songs = []

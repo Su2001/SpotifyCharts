@@ -8,6 +8,7 @@ import requests
 from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
+from prometheus_client import Counter, Histogram, generate_latest
 import google.auth.transport.requests
 
 from songComments_pb2 import (
@@ -41,6 +42,12 @@ flow = Flow.from_client_secrets_file(
     redirect_uri="https://5000-cs-314474093647-default.cs-europe-west1-xedi.cloudshell.dev/callback"
 )
 
+REQUEST_COUNT = Counter('song_comments_requests_total', 'Total number of requests')
+FAILURES_COUNT = Counter('song_comments_failures_total', 'Total number of requests')
+REQUEST_LATENCY = Histogram('song_comments_request_latency_seconds', 'Latency of requests')
+AUTH_REQUEST_COUNT = Counter('song_comments_auth_requests_total', 'Total number of authentication requests')
+SUCESSEFULL_AUTH_REQUEST_COUNT = Counter('song_comments_sucessfull_auth_requests_total', 'Total number of authentication requests')
+
 
 def login_is_required(function):
     def wrapper(*args, **kwargs):
@@ -53,6 +60,7 @@ def login_is_required(function):
 
 @app.route("/premium/song-details/auxlogin")
 def login():
+    AUTH_REQUEST_COUNT.inc()
     authorization_url, state = flow.authorization_url()
     session["state"] = state
     return redirect(authorization_url)
@@ -77,6 +85,7 @@ def callback():
 
     session["google_id"] = id_info.get("sub")
     session["name"] = id_info.get("name")
+    SUCESSEFULL_AUTH_REQUEST_COUNT.inc()
     return redirect("/premium")
 
 @app.route("/premium/song-details/login")
@@ -104,6 +113,8 @@ def protected_area():
 # Endpoint to add Comments to Songs
 @app.route("/premium/song-details/<int:song_id>/comment", methods=["POST"])
 def addComment(song_id):
+    REQUEST_COUNT.inc() 
+    start_time = time.time() 
     # Get the comment data from the request body
     user_id = request.args.get("user_id")
     comment = request.args.get("comment")
@@ -116,14 +127,18 @@ def addComment(song_id):
     comment_response = songComments_client.Add(comment_request)
 
     if comment_response.response == -1:
+        FAILURES_COUNT.inc()
+        REQUEST_LATENCY.observe(time.time() - start_time)
         return("ERROR, Add failed") 
+    REQUEST_LATENCY.observe(time.time() - start_time)
     return jsonify(comment_response.response)
     
 
 # Endpoint to update an existing comment
 @app.route("/premium/song-details/<int:song_id>/comment/<int:comment_id>", methods=["PUT"])
 def updateComment(song_id, comment_id):
-
+    REQUEST_COUNT.inc()
+    start_time = time.time()
     # Get the comment data from the request body
     user_id = request.args.get("user_id")
     comment = request.args.get("comment")
@@ -136,13 +151,17 @@ def updateComment(song_id, comment_id):
     comment_response = songComments_client.Update(comment_request)
 
     if comment_response.response == -1:
+        FAILURES_COUNT.inc()
+        REQUEST_LATENCY.observe(time.time() - start_time)
         return("ERROR, Update failed") 
+    REQUEST_LATENCY.observe(time.time() - start_time)
     return jsonify(comment_response.response)
 
 # Endpoint to delete an existing comment
 @app.route("/premium/song-details/<int:song_id>/comment/<int:comment_id>", methods=["DELETE"])
 def deleteComment(song_id, comment_id):
-
+    REQUEST_COUNT.inc()
+    start_time = time.time()
     # Get the comment data from the request body
     user_id = request.args.get("user_id")
 
@@ -152,7 +171,10 @@ def deleteComment(song_id, comment_id):
     comment_response = songComments_client.Remove(comment_request)
 
     if comment_response.response == -1:
-        return("ERROR, Delete failed") 
+        FAILURES_COUNT.inc()
+        REQUEST_LATENCY.observe(time.time() - start_time)
+        return("ERROR, Delete failed")
+    REQUEST_LATENCY.observe(time.time() - start_time) 
     return jsonify(comment_response.response)
 
 # if __name__ == "__main__":

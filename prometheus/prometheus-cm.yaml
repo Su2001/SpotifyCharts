@@ -8,4 +8,29 @@ scrape_configs:
       scrape_interval: 5s
       static_configs:
         - targets: ['py-prom-s:8000']
+      
+    - job_name: topcharts-service
+      scrape_interval: 5s
+      static_configs:
+        - targets: ['topcharts-service:5001']
+
+    - job_name: playlist-service
+      scrape_interval: 5s
+      static_configs:
+        - targets: ['playlist-service:8080']
+
+    - job_name: songcomments-service
+      scrape_interval: 5s
+      static_configs:
+        - targets: ['songcomments-service:5000']
+
+    - job_name: songdetails-service
+      scrape_interval: 5s
+      static_configs:
+        - targets: ['songdetails-service:5003']
+
+    - job_name: searchservice-service
+      scrape_interval: 5s
+      static_configs:
+        - targets: ['searchservice-service:5002']
 

@@ -13,9 +13,15 @@ kubectl apply -f kubernetes/song/songservice.yaml
 kubectl apply -f kubernetes/topchart/allcontentservice.yaml
 kubectl apply -f kubernetes/topchart/topchart.yaml
 kubectl apply -f kubernetes/ingress.yaml
+
+kubectl apply -f prometheus/components.yaml
+kubectl create configmap prometheus-cm --from-file prometheus-cm.yaml
+kubectl apply -f prometheus/py-prom-d.yaml
+kubectl apply -f prometheus/py-prom-s.yaml
+kubectl apply -f prometheus/grafana.yaml
+kubectl port-forward service/grafana-svc 4200:3000
+
 #kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.6.4/deploy/static/provider/cloud/deploy.yaml
-
-
 
 # DOCKER_BUILDKIT=1 docker build . -f playlist/Dockerfile -t playlist 
 # DOCKER_BUILDKIT=1 docker build . -f userService/Dockerfile -t userservice 
