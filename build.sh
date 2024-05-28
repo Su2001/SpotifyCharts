@@ -15,9 +15,11 @@ kubectl apply -f kubernetes/topchart/topchart.yaml
 kubectl apply -f kubernetes/ingress.yaml
 
 kubectl apply -f prometheus/components.yaml
-kubectl create configmap prometheus-cm --from-file prometheus-cm.yaml
+
 kubectl apply -f prometheus/py-prom-d.yaml
 kubectl apply -f prometheus/py-prom-s.yaml
+kubectl create configmap prometheus-cm --from-file prometheus/prometheus-cm.yaml
+kubectl apply -f prometheus/prometheus.yaml
 kubectl apply -f prometheus/grafana.yaml
 kubectl port-forward service/grafana-svc 4200:3000
 

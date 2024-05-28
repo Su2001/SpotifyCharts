@@ -157,6 +157,10 @@ def updateComment(song_id, comment_id):
     REQUEST_LATENCY.observe(time.time() - start_time)
     return jsonify(comment_response.response)
 
+@app.route('/metrics')
+def metrics():
+    return generate_latest()
+
 # Endpoint to delete an existing comment
 @app.route("/premium/song-details/<int:song_id>/comment/<int:comment_id>", methods=["DELETE"])
 def deleteComment(song_id, comment_id):

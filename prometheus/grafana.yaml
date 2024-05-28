@@ -24,7 +24,7 @@ spec:
         - name: GF_SECURITY_CSRF_ADDITIONAL_HEADERS
           value: ""
         - name: GF_SECURITY_CSRF_TRUSTED_ORIGINS
-          value: "8080-cs-206524253868-default.cs-europe-west1-onse.cloudshell.dev"
+          value: "4200-cs-206524253868-default.cs-europe-west1-onse.cloudshell.dev"
 ---
 kind: Service
 apiVersion: v1

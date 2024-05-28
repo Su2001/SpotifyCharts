@@ -55,6 +55,10 @@ def song_details(song_id):
     finally:
         REQUEST_LATENCY.observe(time.time() - start_time)
 
+@app.route('/metrics')
+def metrics():
+    return generate_latest()
+
 @app.errorhandler(500)
 def internal_error(error):
     response = jsonify({"error": "Internal error"})
