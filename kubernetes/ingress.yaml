@@ -17,32 +17,32 @@ spec:
           service:
             name: songcomments-service
             port:
-              number: 80
+              number: 5003
       - path: /premium/playlist
         pathType: Prefix
         backend:
           service:
             name: playlist-service
             port:
-              number: 80    
+              number: 8080    
       - path: /regular/song-details/
         pathType: Prefix
         backend:
           service:
             name: songdetails-service
             port:
-              number: 80 
+              number: 5003 
       - path: /regular/search
         pathType: Prefix
         backend:
           service:
             name: searchservice-service
             port:
-              number: 80
+              number: 5002
       - path: /regular/top-charts
         pathType: Prefix
         backend:
           service:
             name: topcharts-service
             port:
-              number: 80
+              number: 5001
