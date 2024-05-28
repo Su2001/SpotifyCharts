@@ -36,7 +36,7 @@ def deafaut():
 def healthCheck():
     cpu_percent = psutil.cpu_percent(interval=1)
     memory_usage = psutil.virtual_memory().used
-    PYTHON_CPU_USAGE_GAUGE.set(cpu_percent)di
+    PYTHON_CPU_USAGE_GAUGE.set(cpu_percent)
     PYTHON_MEMORY_USAGE_GAUGE.set(memory_usage)
     return jsonify("ok")
 
