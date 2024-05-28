@@ -9,6 +9,7 @@ from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
 import google.auth.transport.requests
+from prometheus_client import Counter, Histogram, generate_latest
 
 
 playList_host = os.getenv("USERSERVICE_HOST", "localhost")
