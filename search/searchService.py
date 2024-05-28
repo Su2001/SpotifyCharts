@@ -4,6 +4,7 @@ import grpc
 import search_pb2
 import search_pb2_grpc
 from prometheus_client import Counter, Histogram, generate_latest
+import time
 
 app = Flask(__name__)
 
@@ -49,7 +50,7 @@ def search():
     FAILURES_COUNT.inc()
     REQUEST_LATENCY.observe(time.time() - start_time)   
     return("ERROR ON INPUT")
-    
+
 @app.route('/metrics')
 def metrics():
     return generate_latest()

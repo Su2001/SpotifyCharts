@@ -3,6 +3,7 @@ import os
 import topCharts_pb2
 import topCharts_pb2_grpc
 import grpc
+import time
 from prometheus_client import Counter, Histogram, generate_latest
 
 app = Flask(__name__)
