@@ -4,4 +4,3 @@ flask ~= 3.0.2
 pytest ~= 5.4
 mock
 prometheus_client
-time
