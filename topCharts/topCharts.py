@@ -70,7 +70,7 @@ def render_homepage():
 
 @app.route("/metrics", methods=["GET"])
 def stats():
-    return generate_latest(REGISTRY), 200
+    return generate_latest()
 
 if __name__ == "__main__":
     app.run(debug=True)

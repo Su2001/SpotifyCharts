@@ -160,7 +160,7 @@ def updateComment(song_id, comment_id):
 
 @app.route("/metrics", methods=["GET"])
 def stats():
-    return generate_latest(REGISTRY), 200
+    return generate_latest()
 
 # Endpoint to delete an existing comment
 @app.route("/premium/song-details/<int:song_id>/comment/<int:comment_id>", methods=["DELETE"])

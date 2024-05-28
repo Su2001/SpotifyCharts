@@ -57,7 +57,7 @@ def song_details(song_id):
 
 @app.route("/metrics", methods=["GET"])
 def stats():
-    return generate_latest(REGISTRY), 200
+    return generate_latest()
 @app.errorhandler(500)
 def internal_error(error):
     response = jsonify({"error": "Internal error"})
