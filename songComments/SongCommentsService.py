@@ -8,7 +8,7 @@ import requests
 from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
-from prometheus_client import Counter, Histogram, generate_latest
+from prometheus_client import Counter, Histogram, generate_latest, REGISTRY
 import time
 import google.auth.transport.requests
 
@@ -158,9 +158,9 @@ def updateComment(song_id, comment_id):
     REQUEST_LATENCY.observe(time.time() - start_time)
     return jsonify(comment_response.response)
 
-@app.route('/premium/song-details/metrics')
-def metrics():
-    return generate_latest()
+@app.route("/metrics", methods=["GET"])
+def stats():
+    return generate_latest(REGISTRY), 200
 
 # Endpoint to delete an existing comment
 @app.route("/premium/song-details/<int:song_id>/comment/<int:comment_id>", methods=["DELETE"])

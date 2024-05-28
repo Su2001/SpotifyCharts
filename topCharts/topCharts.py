@@ -4,7 +4,7 @@ import topCharts_pb2
 import topCharts_pb2_grpc
 import grpc
 import time
-from prometheus_client import Counter, Histogram, generate_latest
+from prometheus_client import Counter, Histogram, generate_latest, REGISTRY
 
 app = Flask(__name__)
 
@@ -14,6 +14,9 @@ topCharts_client = topCharts_pb2_grpc.TopChartsStub(topCharts_channel)
 REQUEST_COUNT = Counter('topchars_requests_total', 'Total number of requests to /regular/top-charts')
 FAILURES_COUNT = Counter('topchars_failures_total', 'Total number of failures to /regular/top-charts')
 REQUEST_LATENCY = Histogram('topchars_request_latency_seconds', 'Latency of requests to /regular/top-charts')
+
+PYTHON_CPU_USAGE_GAUGE = Gauge("python_cpu_usage_percent", "CPU usage percent")
+PYTHON_MEMORY_USAGE_GAUGE = Gauge("python_memory_usage_bytes", "Memory usage in bytes")
 
 
 def song_to_dict(song):
@@ -31,6 +34,10 @@ def deafaut():
 
 @app.route("/health")
 def healthCheck():
+    cpu_percent = psutil.cpu_percent(interval=1)
+    memory_usage = psutil.virtual_memory().used
+    PYTHON_CPU_USAGE_GAUGE.set(cpu_percent)
+    PYTHON_MEMORY_USAGE_GAUGE.set(memory_usage)
     return jsonify("ok")
 
 @app.route("/regular/top-charts")
@@ -61,9 +68,9 @@ def render_homepage():
     REQUEST_LATENCY.observe(time.time() - start_time)
     return "ERROR, YOU HAVE TO INPUT A DATE AND A COUNTRY, SYNTAX FOR THE DATE- '%Y-%m-%d' "
 
-@app.route('/regular/top-charts/metrics')
-def metrics():
-    return generate_latest()
+@app.route("/metrics", methods=["GET"])
+def stats():
+    return generate_latest(REGISTRY), 200
 
 if __name__ == "__main__":
     app.run(debug=True)

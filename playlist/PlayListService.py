@@ -9,7 +9,7 @@ from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
 import google.auth.transport.requests
-from prometheus_client import Counter, Histogram, generate_latest
+from prometheus_client import Counter, Histogram, generate_latest, REGISTRY
 import time
 
 
@@ -149,9 +149,9 @@ def remove_PlayList(song_id):
     REQUEST_LATENCY.observe(time.time() - start_time)
     return jsonify("Remove success")
 
-@app.route('/premium/playlist/metrics')
-def metrics():
-    return generate_latest()
+@app.route("/metrics", methods=["GET"])
+def stats():
+    return generate_latest(REGISTRY), 200
 
 #if __name__ == "__main__":
  #   app.run(host="0.0.0.0", debug=True)

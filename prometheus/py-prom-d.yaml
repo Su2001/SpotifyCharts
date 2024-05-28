@@ -18,5 +18,6 @@ spec:
       - name: py-prom
         image: su2001/py-prom:latest
         ports:
-        - containerPort: 8000
+        - name : metrics
+          containerPort: 8000
 

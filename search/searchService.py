@@ -3,7 +3,7 @@ import os
 import grpc
 import search_pb2
 import search_pb2_grpc
-from prometheus_client import Counter, Histogram, generate_latest
+from prometheus_client import Counter, Histogram, generate_latest, REGISTRY
 import time
 
 app = Flask(__name__)
@@ -51,9 +51,9 @@ def search():
     REQUEST_LATENCY.observe(time.time() - start_time)   
     return("ERROR ON INPUT")
 
-@app.route('/regular/search/metrics')
-def metrics():
-    return generate_latest()
+@app.route("/metrics", methods=["GET"])
+def stats():
+    return generate_latest(REGISTRY), 200
 
 # if __name__ == "__main__":
 #     app.run(debug = True)

@@ -6,7 +6,7 @@ import grpc
 import random
 import time
 from flask import Flask
-from prometheus_client import Counter, Histogram, generate_latest
+from prometheus_client import Counter, Histogram, generate_latest, REGISTRY
 
 app = Flask(__name__)
 
@@ -55,10 +55,9 @@ def song_details(song_id):
     finally:
         REQUEST_LATENCY.observe(time.time() - start_time)
 
-@app.route('/regular/song-details/metrics')
-def metrics():
-    return generate_latest()
-
+@app.route("/metrics", methods=["GET"])
+def stats():
+    return generate_latest(REGISTRY), 200
 @app.errorhandler(500)
 def internal_error(error):
     response = jsonify({"error": "Internal error"})
