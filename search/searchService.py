@@ -51,7 +51,7 @@ def search():
     REQUEST_LATENCY.observe(time.time() - start_time)   
     return("ERROR ON INPUT")
 
-@app.route('/metrics')
+@app.route('/regular/search/metrics')
 def metrics():
     return generate_latest()
 

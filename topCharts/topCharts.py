@@ -61,7 +61,7 @@ def render_homepage():
     REQUEST_LATENCY.observe(time.time() - start_time)
     return "ERROR, YOU HAVE TO INPUT A DATE AND A COUNTRY, SYNTAX FOR THE DATE- '%Y-%m-%d' "
 
-@app.route('/metrics')
+@app.route('/regular/top-charts/metrics')
 def metrics():
     return generate_latest()
 

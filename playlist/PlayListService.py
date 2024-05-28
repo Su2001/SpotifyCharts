@@ -149,7 +149,7 @@ def remove_PlayList(song_id):
     REQUEST_LATENCY.observe(time.time() - start_time)
     return jsonify("Remove success")
 
-@app.route('/metrics')
+@app.route('/premium/playlist/metrics')
 def metrics():
     return generate_latest()
 

@@ -55,7 +55,7 @@ def song_details(song_id):
     finally:
         REQUEST_LATENCY.observe(time.time() - start_time)
 
-@app.route('/metrics')
+@app.route('/regular/song-details/metrics')
 def metrics():
     return generate_latest()
 

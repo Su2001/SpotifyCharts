@@ -158,7 +158,7 @@ def updateComment(song_id, comment_id):
     REQUEST_LATENCY.observe(time.time() - start_time)
     return jsonify(comment_response.response)
 
-@app.route('/metrics')
+@app.route('/premium/song-details/metrics')
 def metrics():
     return generate_latest()
 
