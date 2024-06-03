@@ -17,7 +17,7 @@ spec:
           service:
             name: songcomments-service
             port:
-              number: 5003
+              number: 5000
       - path: /premium/playlist
         pathType: Prefix
         backend:
