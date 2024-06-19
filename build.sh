@@ -16,8 +16,6 @@ kubectl apply -f kubernetes/ingress.yaml
 
 kubectl apply -f prometheus/components.yaml
 
-kubectl apply -f prometheus/py-prom-d.yaml
-kubectl apply -f prometheus/py-prom-s.yaml
 kubectl create configmap prometheus-cm --from-file prometheus/prometheus-cm.yaml
 kubectl apply -f prometheus/prometheus.yaml
 kubectl apply -f prometheus/grafana.yaml
