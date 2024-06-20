@@ -230,7 +230,7 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/searchservice:latest
 
-    build-test-deploy-for-songdetails:
+  build-test-deploy-for-songdetails:
     needs: continuous-integration-for-songdetails
     runs-on: ubuntu-latest
 
