@@ -14,16 +14,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
     ## CI ##
     - name: Check out the repository
       uses: actions/checkout@v2
 
-    - name: Run tests in topCharts
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies and run tests in topCharts
       run: |
         cd topCharts
+        echo "Current directory: $(pwd)"
         if [ -f requirements.txt ]; then
-          pip3 install -r requirements.txt
+          echo "requirements.txt found, installing dependencies..."
+          pip install --user -r requirements.txt
+        else
+          echo "requirements.txt not found!"
         fi
         pytest
       shell: bash
