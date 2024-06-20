@@ -1,8 +1,8 @@
 FROM python
 
 RUN mkdir /service
-COPY protobufs/ /service/protobufs/
-COPY topCharts/ /service/topCharts/
+COPY ../protobufs/ /service/protobufs/
+COPY ../topCharts/ /service/topCharts/
 
 WORKDIR /service/topCharts
 RUN pip install -r requirements.txt
