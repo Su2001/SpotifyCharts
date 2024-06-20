@@ -10,7 +10,7 @@ on:
 
 jobs:
   ## CI ##
-  continuous-integration:
+  continuous-integration-for-topcharts:
     runs-on: ubuntu-latest
 
     steps:
@@ -36,8 +36,34 @@ jobs:
           pytest
         shell: bash
 
+  continuous-integration-for-search:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies and run tests in search
+        run: |
+          cd search
+          echo "Current directory: $(pwd)"
+          if [ -f requirements.txt ]; then
+            echo "requirements.txt found, installing dependencies..."
+            pip install --user -r requirements.txt
+          else
+            echo "requirements.txt not found!"
+          fi
+          pip3 install --upgrade pytest
+          pytest
+        shell: bash
+
   ## CD ##
-  build-test-deploy:
+  build-test-deploy-for-topcharts:
     needs: continuous-integration
     runs-on: ubuntu-latest
 
@@ -58,3 +84,25 @@ jobs:
           file: topCharts/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/topchartsservice:latest
+
+  build-test-deploy-for-search:
+    needs: continuous-integration
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESSTOKEN }}
+
+      - name: Build and Push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: search/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/searchservice:latest
