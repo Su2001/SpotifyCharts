@@ -153,5 +153,40 @@ def remove_PlayList(song_id):
 def stats():
     return generate_latest()
 
+@app.route("/premium/playlist/test", methods=["GET"])
+def get_PlayList_test():
+    user_id = request.args.get("user_id")
+    #grpc
+    requestAux = GetPlayListRequest(user_id=int(user_id))
+    response = playList_client.Get(requestAux)
+    if response.response == -1:
+        return ("ERROR, the user is not found") 
+
+    a = list(response.songs)
+    return jsonify(a)
+
+@app.route("/premium/playlist/test/<int:song_id>", methods=["POST"])
+# @login_is_required
+def add_PlayList_test(song_id):
+    user_id = str(request.json.get("user_id"))
+
+    #grpc
+    requestAux = ModifyPlayListRequest(user_id = int(user_id), song_id = song_id)
+    response = playList_client.Add(requestAux)
+    if response.response == -1:
+        return("ERROR, Add failed") 
+    return jsonify("Add success")
+
+@app.route("/premium/playlist/test/<int:song_id>", methods=["DELETE"])
+# @login_is_required
+def remove_PlayList_test(song_id):
+    user_id = str(request.args.get("user_id"))
+    #grpc
+    requestAux = ModifyPlayListRequest(user_id = int(user_id), song_id = song_id)
+    response = playList_client.Remove(requestAux)
+    if response.response == -1:
+        return("ERROR, Remove failed")
+    return jsonify("Remove success")
+
 #if __name__ == "__main__":
  #   app.run(host="0.0.0.0", debug=True)
