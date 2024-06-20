@@ -184,7 +184,7 @@ jobs:
           context: .
           file: songComments/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/songcommentsservice:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/songcomments:latest
   
   build-test-deploy-for-playlist:
     needs: continuous-integration-for-playlist
@@ -206,7 +206,7 @@ jobs:
           context: .
           file: playlist/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/playlistservice:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/playlist:latest
 
   build-test-deploy-for-search:
     needs: continuous-integration-for-search
