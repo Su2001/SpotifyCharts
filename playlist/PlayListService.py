@@ -34,7 +34,7 @@ client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret
 flow = Flow.from_client_secrets_file(
     client_secrets_file=client_secrets_file,
     scopes=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
-    redirect_uri="https://8080-cs-314474093647-default.cs-europe-west1-xedi.cloudshell.dev/callback"
+    redirect_uri="https://34.120.107.89/callback"
 )
 
 
