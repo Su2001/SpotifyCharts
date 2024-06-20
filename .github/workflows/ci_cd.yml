@@ -158,7 +158,7 @@ jobs:
           context: .
           file: songComments/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/songCommentsservice:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/songcommentsservice:latest
   
   build-test-deploy-for-playlist:
     needs: continuous-integration-for-playlist
