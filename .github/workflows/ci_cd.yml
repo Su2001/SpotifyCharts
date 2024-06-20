@@ -36,6 +36,58 @@ jobs:
           pytest
         shell: bash
 
+  continuous-integration-for-songcomments:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies and run tests in songcomments
+        run: |
+          cd songComments
+          echo "Current directory: $(pwd)"
+          if [ -f requirements.txt ]; then
+            echo "requirements.txt found, installing dependencies..."
+            pip install --user -r requirements.txt
+          else
+            echo "requirements.txt not found!"
+          fi
+          pip3 install --upgrade pytest
+          pytest
+        shell: bash
+
+  continuous-integration-for-playlist:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies and run tests in playlist
+        run: |
+          cd playlist
+          echo "Current directory: $(pwd)"
+          if [ -f requirements.txt ]; then
+            echo "requirements.txt found, installing dependencies..."
+            pip install --user -r requirements.txt
+          else
+            echo "requirements.txt not found!"
+          fi
+          pip3 install --upgrade pytest
+          pytest
+        shell: bash
+
   continuous-integration-for-search:
     runs-on: ubuntu-latest
 
@@ -84,6 +136,51 @@ jobs:
           file: topCharts/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/topchartsservice:latest
+
+
+  build-test-deploy-for-songcomments:
+    needs: continuous-integration-for-songcomments
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESSTOKEN }}
+
+      - name: Build and Push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: songComments/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/songCommentsservice:latest
+  
+  build-test-deploy-for-playlist:
+    needs: continuous-integration-for-playlist
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESSTOKEN }}
+
+      - name: Build and Push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: playlist/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/playlistservice:latest
 
   build-test-deploy-for-search:
     needs: continuous-integration-for-search
