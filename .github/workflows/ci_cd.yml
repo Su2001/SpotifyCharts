@@ -64,7 +64,7 @@ jobs:
 
   ## CD ##
   build-test-deploy-for-topcharts:
-    needs: continuous-integration
+    needs: continuous-integration-for-topcharts
     runs-on: ubuntu-latest
 
     steps:
@@ -86,7 +86,7 @@ jobs:
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/topchartsservice:latest
 
   build-test-deploy-for-search:
-    needs: continuous-integration
+    needs: continuous-integration-for-search
     runs-on: ubuntu-latest
 
     steps:
