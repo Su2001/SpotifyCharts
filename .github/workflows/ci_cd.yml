@@ -32,6 +32,7 @@ jobs:
           else
             echo "requirements.txt not found!"
           fi
+          pip3 install --upgrade pytest
           pytest
         shell: bash
 
