@@ -3,7 +3,7 @@ services:
     playlist:
         environment:
             USERSERVICE_HOST: userservice
-        image: playlist
+        image: su2001/playlist
         depends_on:
             - userservice
         networks:
@@ -12,63 +12,12 @@ services:
             - 8080:8080
 
     userservice:
-        image: userservice
+        image: su2001/userservice
         networks:
             - microservices
 
-    songcomments:
-        environment:
-            COMMENTS_HOST: songservice
-        image: songcomments
-        depends_on:
-            - songservice
-        networks:
-            - microservices
-        ports:
-            - 5000:5000
 
-    songservice:
-        image: songservice
-        networks:
-            - microservices
 
-    allcontentservice:
-        image: allcontentservice
-        networks:
-            - microservices
-    
-    topchartsservice:
-        image: topchartsservice
-        environment:
-            TOPCHARTS_HOST: allcontentservice
-        depends_on:
-            - allcontentservice
-        networks:
-            - microservices
-        ports:
-            - 5001:5001
-
-    searchservice:
-        image: searchservice
-        environment:
-            SEARCH_HOST: songservice
-        depends_on:
-            - songservice
-        networks:
-            - microservices
-        ports:
-            - 5002:5002
-    
-    songdetailsservice:
-        image: songdetailsservice
-        environment:
-            SONGDETAILS_HOST: songservice
-        depends_on:
-            - songservice
-        networks:
-            - microservices
-        ports:
-            - 5003:5003
 
 networks:
     microservices:

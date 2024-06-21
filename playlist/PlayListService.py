@@ -34,7 +34,7 @@ client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret
 flow = Flow.from_client_secrets_file(
     client_secrets_file=client_secrets_file,
     scopes=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
-    redirect_uri="https://8080-cs-314474093647-default.cs-europe-west1-xedi.cloudshell.dev/callback"
+    redirect_uri="https://34.120.107.89/callback"
 )
 
 
@@ -152,6 +152,41 @@ def remove_PlayList(song_id):
 @app.route("/metrics", methods=["GET"])
 def stats():
     return generate_latest()
+
+@app.route("/premium/playlist/test", methods=["GET"])
+def get_PlayList_test():
+    user_id = request.args.get("user_id")
+    #grpc
+    requestAux = GetPlayListRequest(user_id=int(user_id))
+    response = playList_client.Get(requestAux)
+    if response.response == -1:
+        return ("ERROR, the user is not found") 
+
+    a = list(response.songs)
+    return jsonify(a)
+
+@app.route("/premium/playlist/test/<int:song_id>", methods=["POST"])
+# @login_is_required
+def add_PlayList_test(song_id):
+    user_id = str(request.json.get("user_id"))
+
+    #grpc
+    requestAux = ModifyPlayListRequest(user_id = int(user_id), song_id = song_id)
+    response = playList_client.Add(requestAux)
+    if response.response == -1:
+        return("ERROR, Add failed") 
+    return jsonify("Add success")
+
+@app.route("/premium/playlist/test/<int:song_id>", methods=["DELETE"])
+# @login_is_required
+def remove_PlayList_test(song_id):
+    user_id = str(request.args.get("user_id"))
+    #grpc
+    requestAux = ModifyPlayListRequest(user_id = int(user_id), song_id = song_id)
+    response = playList_client.Remove(requestAux)
+    if response.response == -1:
+        return("ERROR, Remove failed")
+    return jsonify("Remove success")
 
 #if __name__ == "__main__":
  #   app.run(host="0.0.0.0", debug=True)

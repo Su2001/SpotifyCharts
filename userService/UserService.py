@@ -28,18 +28,22 @@ import json, os
 
 counter = 0
 MAX = 10
+mock_db:dict[int,int] = {-1:[100,34,65],
+            -2:[1,2,3],
+            -3:[78],
+            -4:[9]}
 lock = Lock()
-f = open(os.getenv("AUTH_JSON")+".json")
-json_file = json.load(f)
-credentials = service_account.Credentials.from_service_account_info(json_file)
-f.close()
+if os.getenv("AUTH_JSON"):
+    f = open(os.getenv("AUTH_JSON")+".json")
+    json_file = json.load(f)
+    credentials = service_account.Credentials.from_service_account_info(json_file)
+    f.close()
 
 class HealthCheck(health_pb2_grpc.HealthServicer):
 
     def Check(self, request, context):
         global MAX
         global counter
-        print("check")
         if counter < MAX:
             return HealthCheckResponse(status=1)
         if counter == MAX:
@@ -50,7 +54,9 @@ class HealthCheck(health_pb2_grpc.HealthServicer):
 
 class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
     def Add(self, request, context):
-        
+        if request.user_id < 0:
+            mock_db[request.user_id].append(request.song_id)
+            return PlayListResponse(response=1)
         def init_connection_pool(connector: Connector) -> sqlalchemy.engine.Engine:
             def getconn() -> pymysql.connections.Connection:
                 conn = connector.connect(
@@ -88,6 +94,9 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
         return PlayListResponse(response=1)
 
     def Remove(self, request, context):
+        if request.user_id < 0:
+            mock_db[request.user_id].remove(request.song_id)
+            return PlayListResponse(response=1)
         def init_connection_pool(connector: Connector) -> sqlalchemy.engine.Engine:
             def getconn() -> pymysql.connections.Connection:
                 conn = connector.connect(
@@ -124,6 +133,9 @@ class PlayListService(playlist_pb2_grpc.PlayListServiceServicer):
         return PlayListResponse(response=1)
 
     def Get(self, request, context):
+        if request.user_id < 0:
+            return GetPlayListResponse(response = 1,songs=mock_db[request.user_id])
+        
         def init_connection_pool(connector: Connector) -> sqlalchemy.engine.Engine:
             def getconn() -> pymysql.connections.Connection:
                 conn = connector.connect(
