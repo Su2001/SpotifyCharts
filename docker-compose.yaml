@@ -3,7 +3,7 @@ services:
     playlist:
         environment:
             USERSERVICE_HOST: userservice
-        image: su2001/playlist
+        image: playlist
         depends_on:
             - userservice
         networks:
@@ -12,7 +12,7 @@ services:
             - 8080:8080
 
     userservice:
-        image: su2001/userservice
+        image: userservice
         networks:
             - microservices
 
