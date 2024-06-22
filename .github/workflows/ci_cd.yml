@@ -205,7 +205,7 @@ jobs:
           context: .
           file: playlist/Dockerfile
           push: false
-          tags: playlist
+          tags: 1/playlist:latest
 
       - name: Build userservice Docker image
         uses: docker/build-push-action@v2
