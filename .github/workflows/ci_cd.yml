@@ -199,24 +199,19 @@ jobs:
       - name: Set up Docker Compose
         run: sudo apt-get update && sudo apt-get install docker-compose -y
 
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESSTOKEN }}
+          
       - name: Build playlist Docker image
         uses: docker/build-push-action@v2
         with:
           context: .
           file: playlist/Dockerfile
-          push: false
-          tags: 1/playlist:latest
-
-      - name: Build userservice Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: userService/Dockerfile
-          push: false
-          tags: userservice
-
-      - name: List Docker images
-        run: docker images
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/playlist:test
 
       - name: Build and run Docker Compose
         run: docker-compose up --build -d

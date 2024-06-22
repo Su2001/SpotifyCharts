@@ -5,14 +5,14 @@ services:
             USERSERVICE_HOST: userservice
         image: playlist
         depends_on:
-            - userservice
+            - su2001/userservice:test
         networks:
             - microservices
         ports:
             - 8080:8080
 
     userservice:
-        image: userservice
+        image: su2001/userservice
         networks:
             - microservices
 
