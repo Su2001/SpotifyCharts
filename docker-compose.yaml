@@ -3,9 +3,9 @@ services:
     playlist:
         environment:
             USERSERVICE_HOST: userservice
-        image: playlist
+        image: su2001/playlist:test
         depends_on:
-            - su2001/userservice:test
+            - userservice
         networks:
             - microservices
         ports:
