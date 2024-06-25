@@ -3,7 +3,7 @@ services:
     playlist:
         environment:
             USERSERVICE_HOST: userservice
-        image: su2001/playlist
+        image: su2001/playlist:test
         depends_on:
             - userservice
         networks:
