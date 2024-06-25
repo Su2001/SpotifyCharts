@@ -19,6 +19,8 @@ REQUEST_COUNT = Counter('songdetails_requests_total', 'Total number of requests 
 FAILURES_COUNT = Counter('songdetails_failures_total', 'Total number of failures to /regular/song-details')
 REQUEST_LATENCY = Histogram('songdetails_request_latency_seconds', 'Latency of requests to /regular/song-details')
 
+cache ={}
+
 def song_to_dict(song):
     return {
         "song_id": song.song_id,
@@ -43,10 +45,13 @@ def song_details(song_id):
     # response = songDetails_client.GetSongDetails(request)
     # song = song_to_dict(response.song)
     # return jsonify(song)
+    if song_id in cache:
+        return jsonify(cache[song_id])
     try:
         request = songDetails_pb2.GetSongDetailsRequest(id=song_id)
         response = songDetails_client.GetSongDetails(request)
         song = song_to_dict(response.song)
+        cache[song_id] = song
         return jsonify(song)
     except Exception as e:
         FAILURES_COUNT.inc()

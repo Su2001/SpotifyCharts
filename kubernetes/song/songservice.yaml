@@ -10,7 +10,7 @@ spec:
       maxSurge: 20%
       maxUnavailable: 20%
     type: RollingUpdate
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: songservice
@@ -24,17 +24,18 @@ spec:
         image: su2001/songservice
         resources:
           requests:
-            memory: "32Mi"
-            cpu: "125m"
+            memory: "256Mi"
+            cpu: "500m"
           limits:
-            memory: "64Mi"
-            cpu: "250m"
+            memory: "512Mi"
+            cpu: "1000m"
         ports:
           - containerPort: 50051
         livenessProbe:
           grpc:
             port: 50051
-          initialDelaySeconds: 30
+          initialDelaySeconds: 15
+          periodSeconds: 300
         env:
           - name: AUTH_JSON
             valueFrom:
