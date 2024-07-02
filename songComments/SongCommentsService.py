@@ -30,12 +30,7 @@ songComments_channel = grpc.insecure_channel(f"{songComments_host}:50051")
 songComments_client = songComments_pb2_grpc.CommentServiceStub(songComments_channel)
 
 
-app.secret_key = "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" 
 
-os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
-
-GOOGLE_CLIENT_ID = "475938769974-0u2gdtmtdum1hhocg0qvmnbduu5b3skd.apps.googleusercontent.com"
-client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
 
 flow = Flow.from_client_secrets_file(
     client_secrets_file=client_secrets_file,
